@@ -1,15 +1,18 @@
-/* POLISH EXPRESSion OVERVIEW (in case you missed it, this is a take on the movie "Polar Express")
+/* 
+POLISH EXPRESSion OVERVIEW (in case you missed it, this is a take on the movie "Polar Express" hence the train)
+
 2019-11-06 Version 1: The purpose of this game is to practice and improve floor planning using translation from
-a Polish Expression to clustered floorplan. Players are given a PE and a stack of labelled blocks.
-These both appear on the train icon.  The train "moves" along the track toward a hole where a bridge
-must be built using the blocks.  The user clicks and drags blocks into the bridge grid per the 
-PE and must complete all placement correctly before the train arrives at the bridge.
+a Polish Expression (PE) to clustered floorplan. Players are given a PE and a stack of labelled blocks.
+These both appear on the train icon.  The train moves along the track toward a hole where a bridge
+must be built using the blocks.  Actually, the hole moves toward the train but the effect is the same.
+The user clicks and drags blocks into the bridge grid per the PE and must complete all placement correctly 
+before the train arrives at the bridge.
 
 Improvements:
 - randomly generate PEs to solve
 - background music for start screen, gameplay (different levels), and end screen
 - sound effects for movements
-- PE optimization
+- PE optimization and better algorithm challenges to better meet the requirements of the assignment
 */
 
 /* Audio functions */
@@ -19,7 +22,11 @@ import processing.sound.*;
 int s32DisplayWidth  = displayWidth;
 int s32DisplayHeight = displayHeight;
 
-byte s8ProgramState = 0;
+
+/* Fonts (adapted from "Version3" example code in ENEL683 */
+PFont fontMenu = createFont("Calibri-Bold", 48, true);
+
+
 /* 
 Program States
 0 = Start screen (set options; exits on "Start" button)
@@ -27,6 +34,7 @@ Program States
 2 = Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level)
 3 = Game over (good-bye screen; exits on "OK" or "Exit" buttons)
 */
+byte s8ProgramState = 0;
 
 /* Program variables */
 byte s8GameLevel = 1;
@@ -42,7 +50,7 @@ void draw()
 
   switch(s8ProgramState)
   {
-    /* State 0 = Start screen (set options; exits on "Start" button */
+    /* State 0 = Start screen (set options; exits on "Start" button) */
     case(0):
     {
       
@@ -53,6 +61,12 @@ void draw()
     case(1):
     {
 
+      /* State exit */
+      if(s8ProgramState != 1)
+      {
+        
+      }
+
       break;
     } /* end Game starting */
 
@@ -60,6 +74,7 @@ void draw()
     /* State 2 = Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level) */
     case(2):
     {
+      /* Variables local to State 2 defined here (and Processing actually scopes them only to this case) */
       byte s8GraphicState = 0;
       int  s32GraphicDelayValue = 300 / s8GameLevel;   
       int  s32GraphicChangeDelay = s32GraphicDelayValue;
