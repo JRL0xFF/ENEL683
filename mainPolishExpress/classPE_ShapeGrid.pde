@@ -16,8 +16,6 @@ API
 public boolean AddQuadShape(byte s8TopLeftX_, byte s8TopLeftY_, byte s8SizeX_, byte s8SizeY_, char s8Name_)
 public boolean RemoveQuadShape(char s8Name_)
 public void DrawShapeGrid(byte s8TopLeftX_, byte s8TopLeftY_, int s32BlockSize_) 
-
-
 */
 
 color colorFilledBlock = color(63,2,178);
@@ -28,7 +26,7 @@ class PE_ShapeGrid
 {
   private byte m_s8GridWidth;
   private byte m_s8GridHeight;
-  private char[][];
+  private char[][]m_acGrid;
   
   /* Track entries in the grid with a trio of data points (a sparse matrix); maximum entries when Width x Height 1x1 entries.
   This is redundant to the m_acGrid which we don't really need if we have the entry data but 
