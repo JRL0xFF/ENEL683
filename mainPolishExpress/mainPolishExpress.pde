@@ -18,15 +18,24 @@ Improvements:
 */
 
 /* Audio functions */
-import processing.sound.*;
+//import processing.sound.*;
 
 /* Display parameters for screen adjustment */
 int s32DisplayWidth  = displayWidth;
 int s32DisplayHeight = displayHeight;
 
+/* Colors */
+color red = color(255,0,0);
+color dark_red = color(152,21,21);
+color gold = color(255,211,90);
+color blue = color(5,178,255);
+color gray = color(149,149,149);
+color dark_gray = color(82,82,82);
+color black = color(0,0,0);
+color green = color(46,183,6);
 
 /* Fonts (adapted from "Version3" example code in ENEL683 */
-PFont fontMenu = createFont("Calibri-Bold", 48, true);
+//PFont fontMenu = createFont("Calibri-Bold", 48, true);
 
 
 /* 
@@ -36,39 +45,50 @@ Program States
 2 = Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level)
 3 = Game over (good-bye screen; exits on "OK" or "Exit" buttons)
 */
-byte s8ProgramState = 0;
+byte s8ProgramState = 1;
 
 /* Program variables */
 byte s8GameLevel = 1;
 
 void setup()
 {
-  fullScreen();
+  //fullScreen();
+  size(1000,800);
 }
 
+
+/* Variables for State 2  */
+byte s8GraphicState;
+int  s32GraphicDelayValue;   
+int  s32GraphicChangeDelay;
+boolean bInState2;
 
 void draw()
 {
   /* Test mode */
-  s8ProgramState = 2;
+  //s8ProgramState = 1;
 
   switch(s8ProgramState)
   {
     /* State 0 = Start screen (set options; exits on "Start" button) */
-    case(0):
+    case 0:
     {
       
       break;     
     } /* end Start screen */
 
     /* State 1 = Game starting (starting countdown; exits on timer delay) */
-    case(1):
+    case 1:
     {
-
+      s8ProgramState = 2;
+      
       /* State exit */
       if(s8ProgramState != 1)
       {
-        
+        s8GraphicState = 0;
+        s32GraphicDelayValue = 30 / s8GameLevel;   
+        s32GraphicChangeDelay = s32GraphicDelayValue;
+        bInState2 = true;        
       }
 
       break;
@@ -76,14 +96,8 @@ void draw()
 
 
     /* State 2 = Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level) */
-    case(2):
-    {
-      /* Variables local to State 2 defined here (and Processing actually scopes them only to this case) */
-      byte s8GraphicState = 0;
-      int  s32GraphicDelayValue = 300 / s8GameLevel;   
-      int  s32GraphicChangeDelay = s32GraphicDelayValue;
-      bool bInState2 = TRUE;
-      
+    case 2:
+    {      
       /* Update the graphics every s32GraphicDelayValue iterations */
       s32GraphicChangeDelay--;
       if(s32GraphicChangeDelay == 0)
@@ -96,15 +110,15 @@ void draw()
           s8GraphicState = 0;
         }
         
+        /* Update the animated graphics */
+        shapeTrain(300,200,s8GraphicState);     
+        
       }
       
-      /* Draw the current landscape */
-      
-
       /* State exit */
       if(s8ProgramState != 2)
       {
-        u8GraphicState = 0;
+        s8GraphicState = 0;
       }
       
       
@@ -113,7 +127,7 @@ void draw()
 
 
     /* 3 = Game over (good-bye screen; exits on "OK" or "Exit" buttons) */
-    case(3):
+    case 3:
     {
       
       break;     
@@ -128,4 +142,8 @@ void draw()
 
   } /* end switch(s8ProgramState) */
   
-}
+} /* end draw() */
+
+
+
+  

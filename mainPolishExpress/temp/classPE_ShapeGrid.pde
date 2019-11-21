@@ -51,7 +51,7 @@ class PE_ShapeGrid
     m_as8EntryListWidths  = new byte[1];
     m_as8EntryListHeights = new byte[1];
     
-    m_acEntryListNames[0]     = '\0'
+    m_acEntryListNames[0]  = '\0';
     m_as8EntryListWidths[0]  = 0;
     m_as8EntryListHeights[0] = 0;
     
@@ -79,7 +79,7 @@ class PE_ShapeGrid
       for(int j = 0; j < m_s8GridWidth; j++)
       {
         m_acGrid[i][j] = '\0';
-        m_acEntryListNames[s32EntryCounter]    = '\0'
+        m_acEntryListNames[s32EntryCounter]  = '\0';
         m_as8EntryListWidths[s32EntryCounter]  = 0;
         m_as8EntryListHeights[s32EntryCounter] = 0;
         s32EntryCounter++;
@@ -108,7 +108,7 @@ class PE_ShapeGrid
       for(int j = 0; j < this.m_s8GridWidth; j++)
       {
         this.m_acGrid[i][j] = Source_.m_acGrid[i][j];
-        this.m_acEntryListNames[s32EntryCounter]    = Source_.m_acEntryListNames[s32EntryCounter]
+        this.m_acEntryListNames[s32EntryCounter]    = Source_.m_acEntryListNames[s32EntryCounter];
         this.m_as8EntryListWidths[s32EntryCounter]  = Source_.m_as8EntryListWidths[s32EntryCounter];
         this.m_as8EntryListHeights[s32EntryCounter] = Source_.m_as8EntryListHeights[s32EntryCounter];
         s32EntryCounter++;
@@ -256,7 +256,7 @@ class PE_ShapeGrid
     /* Return if the entry was not found */
     if(!bFoundEntry)
     {
-      return false
+      return false;
     }
     
     /* Save the entry info from the tracking struct */
@@ -342,7 +342,7 @@ class PE_ShapeGrid
     /* Set font height based on the size of the block, but limit to a maximum size */    
     int s32FontHeight = 0;
     
-    if(s32BlockSize >= 10)
+    if(s32BlockSize_ >= 10)
     {
       s32FontHeight = s32BlockSize_ - 4;
     }
@@ -371,7 +371,7 @@ class PE_ShapeGrid
           /* Draw a filled box and add the font if the block is large enough */ 
           fill(colorFilledBlock);
           rect( (i * s32BlockSize_), (j * s32BlockSize_), s32BlockSize_, s32BlockSize_);
-          if(s32FontHeight)
+          if(s32FontHeight > 8)
           {
             fill(255);
             text(m_acGrid[i][j], i * s32BlockSize_, j * s32BlockSize_);

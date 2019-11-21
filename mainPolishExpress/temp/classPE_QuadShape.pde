@@ -43,7 +43,7 @@ class PE_QuadShape
   /* Copy Constructor */
   public PE_QuadShape(PE_QuadShape Source_) 
   {
-    this.m_s8Width = Source_.wid;
+    this.m_s8Width = Source_.m_s8Width;
     this.m_s8Height = Source_.m_s8Height;
     this.m_s32CurrentLocationX = Source_.m_s32CurrentLocationX;
     this.m_s32CurrentLocationY = Source_.m_s32CurrentLocationY;
@@ -53,31 +53,31 @@ class PE_QuadShape
   
   
   /* Public functions to access members */
-  public s8 getWidth() 
+  public byte getWidth() 
   {
     return m_s8Width;
   } /* end getWidth() */
 
 
-  public s8 getHeight() 
+  public byte getHeight() 
   {
-    return m_s8Height_;
+    return m_s8Height;
   } /* end getHeight() */
   
   
-  public s32 getLocX() 
+  public int getLocX() 
   {
     return m_s32CurrentLocationX;
   } /* end getLocX() */
 
   
-  public s32 getLocY() 
+  public int getLocY() 
   {
     return m_s32CurrentLocationY;
   } /* end getLocY() */
   
   
-  public s32 getRotation() 
+  public int getRotation() 
   {
     return m_s32Rotation;
   } /* end getRotation() */  
