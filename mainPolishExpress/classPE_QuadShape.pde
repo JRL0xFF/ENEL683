@@ -2,7 +2,7 @@
 POLISH EXPRESSion Quadrilateral Shape Class
 
 This class provides the size and location definition for the rectangles used in "The Polish Expression" game.
-The class includes functions to print out the shape according to it's dimensional size and the block size.
+The class includes functions to print out the shape according to its dimensional size and the block size.
 */
 class PE_QuadShape 
 {
@@ -61,7 +61,7 @@ class PE_QuadShape
 
   public s8 getHeight() 
   {
-    return s8Height_;
+    return m_s8Height_;
   } /* end getHeight() */
   
   
@@ -82,7 +82,7 @@ class PE_QuadShape
     return m_s32Rotation;
   } /* end getRotation() */  
 
-  /* Public functions to uppdate members */  
+  /* Public functions to update members */  
   public void setLocation(int s32NewX_, int s32NewY_) 
   {
     m_s32CurrentLocationX = s32NewX_;
@@ -94,5 +94,7 @@ class PE_QuadShape
   {
     m_s32Rotation = s32NewRot_;
   } /* end setRotation() */  
+
+
 
 } /* end class PE_QuadShape */

@@ -13,6 +13,8 @@ Improvements:
 - background music for start screen, gameplay (different levels), and end screen
 - sound effects for movements
 - PE optimization and better algorithm challenges to better meet the requirements of the assignment
+- Create increasingly difficult bridges to climb a mountain and get to an end point.  Then do "something"
+  with the collection of PEs used.
 */
 
 /* Audio functions */
@@ -47,6 +49,8 @@ void setup()
 
 void draw()
 {
+  /* Test mode */
+  s8ProgramState = 2;
 
   switch(s8ProgramState)
   {
