@@ -13,6 +13,7 @@ color blue = color(5,178,255);
 color gray = color(149,149,149);
 color dark_gray = color(82,82,82);
 color black = color(0,0,0);
+color green = color(46,183,6);
 
 int s32Counter = 0;
 byte s8Mode = 1;
@@ -36,19 +37,23 @@ one of the three positions
   
 void setup()
 {
-  size(300,300);
+  size(800,400);
 }
 
 void draw()
 {
   s32Counter++;
 
-  if( s32Counter == 20)
+  if(s32Counter == 10)
   {
     s32Counter = 0;
+
+    /* The main train */
+
     /* Offset the drawing by the amount indicated */
     //translate(s32X_, s32Y_);
-    scale(2.0);
+    translate(300,200);
+    //scale(2.0);
     /* The gold parts of the train */
     fill(gold);
     quad(0,0, 35,0, 35,5, 0,5);
@@ -68,8 +73,8 @@ void draw()
     fill(blue);
     quad(30,20, 80,20, 80,40, 30,40);
     quad(74,5, 61,5, 65,20, 70,20);
-    
-    /* The common wheels */
+
+    /* The common train wheels */
     fill(black);
     circle(17,52,24);
     circle(40,58,12);
@@ -81,19 +86,19 @@ void draw()
     circle(40,58,9);
     circle(55,58,9);
     circle(70,58,9);
-  
-    /* Mode-specific wheel spokes */
+      
+    /* Mode-specific train wheel spokes */
     strokeWeight(2);
     //s8Mode = 3;
     switch(s8Mode)
     {
       case 1:
       {
-        /* Large wheel */
+        /* Train large wheel */
         line(17,41, 17,63);
         line(5,52, 29,52);
 
-        /* Small wheels */
+        /* Train small wheels */
         strokeWeight(1);
         line(40,53, 40,63);
         line(35,58, 45,58);
@@ -147,9 +152,70 @@ void draw()
         /* Don't print anything */
         break;
       }
-  
+
     } /* end switch(s8Mode) */
 
+    /* The train car */
+    translate(-150,0);
+    fill(green);
+    rect(0,35,130,17);
+    fill(black);
+    rect(130,48, 20,3);
+
+    /* The common train car wheels */
+    fill(black);
+    circle(20,58,12);
+    circle(110,58,12);
+  
+    fill(gray);
+    circle(20,58,9);
+    circle(110,58,9);
+    
+    /* Mode-specific train car wheel spokes */
+    strokeWeight(1);
+    //s8Mode = 1;
+    switch(s8Mode)
+    {
+      case 1:
+      {
+        line(20,53, 20,63);
+        line(15,58, 25,58);
+
+        line(110,53, 110,63);
+        line(105,58, 115,58);
+        break;
+      } /* end case 1 */
+  
+      case 2:
+      {
+        line(22,54, 18,62);
+        line(17,56, 23,60);
+
+        line(112,54, 108,62);
+        line(107,56, 113,60);
+        break;
+        
+      } /* end case 2 */
+  
+      case 3:
+      {
+        line(22,62, 18,55);
+        line(17,60, 24,55);
+
+        line(112,62, 108,55);
+        line(107,60, 114,55);
+        break;
+        
+      } /* end case 3 */
+      
+      default:
+      {
+        /* Don't print anything */
+        break;
+      }
+
+    } /* end switch(s8Mode) */
+    
      /* Increment mode and wrap if necessary */
     s8Mode++;
     if(s8Mode == 4)
