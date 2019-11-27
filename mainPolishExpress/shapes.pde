@@ -9,7 +9,7 @@ Graphical items used in the Polish Express game.
 @fn void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, byte s32Mode_)
 @brief Draws the main train graphic at the location specified.
 
-The train graphic occupies an area 90 pixels wide by 55 pixels tall.
+The train graphic occupies an area 240 pixels wide by 55 pixels tall.
 
 Requires
 @param s8TopLeftX_ Starting X coordinate of the train 
@@ -188,5 +188,8 @@ void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, int s32Mode_)
     }
 
   } /* end switch(s32Mode_) */
-  
+
+  /* Clear the translate offsets for functions following this */
+  translate(-s8TopLeftX_ + 150, -s8TopLeftY_);
+
 } /* end shapeTrain() */

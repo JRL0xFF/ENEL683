@@ -32,6 +32,37 @@ void DrawMainMenu()
 
 
 /*!************************************************************************************************
+@fn void DrawGameOverMenu()
+@brief Draws the menu at the end of the game
+
+Requires
+- NONE
+
+Promises
+All buttons in as32EndButtons are written to the screen with a background border that extends
+25 pixels around the buttons.
+*/
+void DrawGameOverMenu() 
+{
+  /* Menu background */
+  fill(button_background);
+  rect( (as32EndButtons[0][0] - 25), ((as32EndButtons[0][1] - 25)), (as32EndButtons[0][2] + 50), ((as32EndButtons[0][3] + 25) * s32NumEndButtons) + 25);
+  textAlign(CENTER, CENTER);
+
+  /* Draw the buttons */
+  textSize(20);
+  for (int i = 0; i < s32NumEndButtons; i++)
+  {
+    fill(button_color);
+    rect(as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2], as32EndButtons[i][3]);
+    fill(button_text_color);
+    text(strEndButtonNames.get(i), as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2] - 5, as32EndButtons[i][3] - 5);
+  }
+
+} /* end DrawGameOverMenu() */
+
+
+/*!************************************************************************************************
 @fn boolean IsMouseOverRect(int as32RectParameters[])
 @brief Checks to see if the mouse if over a specified rectangle
 

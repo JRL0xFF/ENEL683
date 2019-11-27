@@ -22,19 +22,22 @@ Improvements:
 - background music for start screen, gameplay (different levels), and end screen
 - sound effects for movements
 - PE optimization and better algorithm challenges to better meet the requirements of the assignment
-- Do "something"
-  with the collection of PEs used.
+- Do "something" with the collection of PEs used.
+- Save high score to file so it persists
 */
 
 /* Audio */
 import processing.sound.*;
 SoundFile songMenuScreen;
 SoundFile songGameScreen;
-boolean bSoundOn = false;
+boolean bSoundOn = true;
+//boolean bSoundOn = false;
  
 
 /* Images */
 PImage imgTitleScreen;
+PImage imgInstrScreen;
+PImage imgGameScreen;
 
 /* Display parameters for screen adjustment */
 int s32DisplayWidth  = displayWidth;
@@ -50,6 +53,7 @@ color dark_gray = color(82,82,82);
 color black = color(0,0,0);
 color green = color(46,183,6);
 color button_color = color(125,156,222);
+color button_color_mouse_over = color(173,193,234);
 color button_text_color = color(255,255,255);
 color button_background = color(92,101,121);
 
@@ -67,21 +71,31 @@ Program States
 byte s8ProgramState = 1;
 
 /* Program variables */
-byte s8GameLevel = 1;
+byte s8GameLevel = 2;
+int  s32CurrentScore = 0;
+int  s32HighScore = 0;
 
-/* Buttons.  Arrays are [BUTTON_NUMBER][RECTANGLE_PARAMETER] */
+/* Buttons - arrays are [BUTTON_NUMBER][RECTANGLE_PARAMETER] */
+final int s32NoButtonPressed = -1;
+
 int [][]as32MenuButtons;    
-int s32NumMenuButtons = 3;
-int s32MenuStartButton = 0;
-int s32MenuInstructionsButton = 1;
-int s32MenuQuitButton = 2;
+final int s32NumMenuButtons = 3;
+final int s32MenuStartButton = 0;
+final int s32MenuInstructionsButton = 1;
+final int s32MenuQuitButton = 2;
 StringList strMenuButtonNames;
 
+int [][]as32GameButtons;    
+final int s32NumGameButtons = 1;
+final int s32GameStopButton = 0;
+StringList strGameButtonNames;
+
 int [][]as32EndButtons;
-int s32NumEndButtons = 3;
-int s32EndRestartButton = 0;
-int s32EndMenuButton = 1;
-int s32EndQuitButton = 2;
+final int s32NumEndButtons = 3;
+final int s32EndRestartButton = 0;
+final int s32EndMenuButton = 1;
+final int s32EndQuitButton = 2;
+StringList strEndButtonNames;
 
 void setup()
 {
@@ -90,9 +104,12 @@ void setup()
   /* For now, set screen size to the TitleScreen image size */
   size(1200,675);
   imgTitleScreen = loadImage("TitleScreen.jpg");
+  imgInstrScreen = loadImage("GameInstructions.jpg");
+  imgGameScreen  = loadImage("GameBackground.jpg");
   
   /* One-time menu and buttons setup */
   as32MenuButtons = new int[s32NumMenuButtons][4];
+  as32GameButtons = new int[s32NumGameButtons][4];
   as32EndButtons  = new int[s32NumEndButtons][4];
   
   /* Menu START button */
@@ -118,6 +135,17 @@ void setup()
   strMenuButtonNames.append("INSTRUCTIONS");
   strMenuButtonNames.append("QUIT");
 
+
+  /* Game STOP button */
+  as32GameButtons[s32MenuStartButton][0] = 25;
+  as32GameButtons[s32MenuStartButton][1] = 25;
+  as32GameButtons[s32MenuStartButton][2] = 100;
+  as32GameButtons[s32MenuStartButton][3] = 25;  
+
+  strGameButtonNames = new StringList();
+  strGameButtonNames.append("STOP");
+  
+  
   /* End RETRY button */
   as32EndButtons[s32MenuStartButton][0] = 525;
   as32EndButtons[s32MenuStartButton][1] = 250;
@@ -130,12 +158,17 @@ void setup()
   as32EndButtons[s32MenuInstructionsButton][2] = 250;
   as32EndButtons[s32MenuInstructionsButton][3] = 50;  
 
-  /* Menu QUIT button */
+  /* End QUIT button */
   as32EndButtons[s32MenuQuitButton][0] = 525;
   as32EndButtons[s32MenuQuitButton][1] = 400;
   as32EndButtons[s32MenuQuitButton][2] = 250;
   as32EndButtons[s32MenuQuitButton][3] = 50;  
-  
+
+  strEndButtonNames = new StringList();
+  strEndButtonNames.append("RETRY");
+  strEndButtonNames.append("MAIN MENU");
+  strEndButtonNames.append("QUIT");
+
   
   /* Setup audio and opening screen song */
   if(bSoundOn)
@@ -150,12 +183,8 @@ void setup()
 } /* end setup() */
 
 
-
-
 void draw()
 {
-  /* Test mode */
-  //s8ProgramState = 0;
 
   switch(s8ProgramState)
   {
@@ -163,7 +192,6 @@ void draw()
     case 0:
     {
       PolishExpressState0();     
-      
       break;     
     } /* end Start screen */
 
