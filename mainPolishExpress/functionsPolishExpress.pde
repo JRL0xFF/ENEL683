@@ -15,7 +15,7 @@ void DrawMainMenu()
 {
   /* Menu background */
   fill(button_background);
-  rect( (as32MenuButtons[0][0] - 25), ((as32MenuButtons[0][1] - 25)), (as32MenuButtons[0][2] + 50), ((as32MenuButtons[0][3] + 25) * s32NumMenuButtons) + 25);
+  rect( (as32MenuButtons[0][0] - 25), ((as32MenuButtons[0][1] - 25)), (as32MenuButtons[0][2] + 50), ((as32MenuButtons[0][3] + 25) * s32NumMenuButtons) + 25, s32ButtonCornerRadius);
   textAlign(CENTER, CENTER);
 
   /* Draw the buttons */
@@ -23,7 +23,7 @@ void DrawMainMenu()
   for (int i = 0; i < s32NumMenuButtons; i++)
   {
     fill(button_color);
-    rect(as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2], as32MenuButtons[i][3]);
+    rect(as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2], as32MenuButtons[i][3], s32ButtonCornerRadius);
     fill(button_text_color);
     text(strMenuButtonNames.get(i), as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2] - 5, as32MenuButtons[i][3] - 5);
   }
@@ -46,7 +46,7 @@ void DrawGameOverMenu()
 {
   /* Menu background */
   fill(button_background);
-  rect( (as32EndButtons[0][0] - 25), ((as32EndButtons[0][1] - 25)), (as32EndButtons[0][2] + 50), ((as32EndButtons[0][3] + 25) * s32NumEndButtons) + 25);
+  rect( (as32EndButtons[0][0] - 25), ((as32EndButtons[0][1] - 25)), (as32EndButtons[0][2] + 50), ((as32EndButtons[0][3] + 25) * s32NumEndButtons) + 25, s32ButtonCornerRadius);
   textAlign(CENTER, CENTER);
 
   /* Draw the buttons */
@@ -54,7 +54,7 @@ void DrawGameOverMenu()
   for (int i = 0; i < s32NumEndButtons; i++)
   {
     fill(button_color);
-    rect(as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2], as32EndButtons[i][3]);
+    rect(as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2], as32EndButtons[i][3], s32ButtonCornerRadius);
     fill(button_text_color);
     text(strEndButtonNames.get(i), as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2] - 5, as32EndButtons[i][3] - 5);
   }

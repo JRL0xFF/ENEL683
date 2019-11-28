@@ -131,7 +131,7 @@ void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, int s32Mode_)
 
   /* The train car */
   translate(-150,0);
-  fill(green);
+  fill(blue);
   rect(0,35,130,17);
   fill(black);
   rect(130,48, 20,3);

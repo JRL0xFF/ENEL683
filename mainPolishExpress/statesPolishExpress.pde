@@ -1,6 +1,6 @@
 /* 
 POLISH EXPRESSion program state functions
-This file has the code for each state of the program to help readability.
+This file has the code for each state of the program to try to help readability.
 Each state has regular operation code PolishExpressionStateX() 
 and mouse functionality code PolishExpressStateXMouse()
 */
@@ -13,90 +13,91 @@ int  s32GraphicChangeDelay;
 
 
 /*****************************************************************************************
-STATE 0
+STATE 0: Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button)
 ******************************************************************************************/
 boolean bShowInstructions = false;
 
 void PolishExpressState0()
 {
-    /* Variables local to this state */
+  /* Variables local to this state */
 
-    /* Always draw the background and menu */
-    image(imgTitleScreen, 0, 0);
-    DrawMainMenu();
-    
-    /* Draw the instructions if requested */
-    if(bShowInstructions == true)
+  /* Always draw the background and menu */
+  image(imgTitleScreen, 0, 0);
+  DrawMainMenu();
+  
+  /* Draw the instructions if requested */
+  if(bShowInstructions == true)
+  {
+     image(imgInstrScreen, 100, 150);
+  }
+  
+  /* Highlight a button on mouse-over */
+  for (int i = 0; i < s32NumMenuButtons; i++)
+  { 
+    if(IsMouseOverRect(as32MenuButtons[i]))
     {
-       image(imgInstrScreen, 100, 150);
+      fill(button_color_mouse_over);
+      rect(as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2], as32MenuButtons[i][3], s32ButtonCornerRadius);
+      fill(button_text_color);
+      text(strMenuButtonNames.get(i), as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2] - 5, as32MenuButtons[i][3] - 5);
     }
-    
-    /* Highlight a button on mouse-over */
-    for (int i = 0; i < s32NumMenuButtons; i++)
-    { 
-      if(IsMouseOverRect(as32MenuButtons[i]))
+  }
+
+  /* mousePressed() will update s32ButtonNumberPressed so check this */
+  switch(s32ButtonNumberPressed)
+  {
+    /* Do nothing if no button is pressed */
+    case s32NoButtonPressed:
+    {
+      break;     
+    } /* end s32NoButtonPressed */
+
+    /* Start button transitions to State 1 */
+    case s32MenuStartButton:
+    {
+      s32ButtonNumberPressed = s32NoButtonPressed;
+      
+      if(bSoundOn)
       {
-        fill(button_color_mouse_over);
-        rect(as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2], as32MenuButtons[i][3]);
-        fill(button_text_color);
-        text(strMenuButtonNames.get(i), as32MenuButtons[i][0], as32MenuButtons[i][1], as32MenuButtons[i][2] - 5, as32MenuButtons[i][3] - 5);
+        songMenuScreen.stop();
       }
-    }
 
-    /* mousePressed() will update s32ButtonNumberPressed so check this */
-    switch(s32ButtonNumberPressed)
+      bShowInstructions = false;
+      s8ProgramState = 1;
+      image(imgGameScreen, 0, 0);
+      shapeTrain(190, 490, 0);
+
+      break;
+    } /* end s32MenuStartButton */
+
+
+    /* Instruction button pops up the instruction screen */
+    case s32MenuInstructionsButton:
+    {      
+      s32ButtonNumberPressed = s32NoButtonPressed;
+      bShowInstructions = true;
+      break;     
+    } /* end s32MenuInstructionsButton */
+
+
+    /* Quit button can immediately kill the program */
+    case s32MenuQuitButton:
     {
-      /* Do nothing if no button is pressed */
-      case s32NoButtonPressed:
-      {
-        break;     
-      } /* end s32NoButtonPressed */
-  
-      /* Start button transitions to State 1 */
-      case s32MenuStartButton:
-      {
-        s32ButtonNumberPressed = s32NoButtonPressed;
-        
-        if(bSoundOn)
-        {
-          songMenuScreen.stop();
-        }
+      exit();
+      break;     
+    } /* end s32MenuQuitButton */
 
-        bShowInstructions = false;
-        s8ProgramState = 1;
-        image(imgGameScreen, 0, 0);
-        shapeTrain(190, 490, 0);
 
-        break;
-      } /* end s32MenuStartButton */
-  
-  
-      /* Instruction button pops up the instruction screen */
-      case s32MenuInstructionsButton:
-      {      
-        s32ButtonNumberPressed = s32NoButtonPressed;
-        bShowInstructions = true;
-        break;     
-      } /* end s32MenuInstructionsButton */
-  
-  
-      /* Quit button can immediately kill the program */
-      case s32MenuQuitButton:
-      {
-        exit();
-        break;     
-      } /* end s32MenuQuitButton */
-  
-  
-      default:
-      {
-        print("ERROR: undefined button press\n\r");
-        exit();
-      } /* end default */    
-      
-    } /* end switch (s32ButtonNumberPressed) */
-      
+    default:
+    {
+      print("ERROR: undefined button press\n\r");
+      exit();
+    } /* end default */    
+    
+  } /* end switch (s32ButtonNumberPressed) */
+    
 } /* end PolishExpressState0() */
+
 
 void PolishExpressState0Mouse()
 {
@@ -112,11 +113,12 @@ void PolishExpressState0Mouse()
   
 } /* end PolishExpressState0Mouse() */
 
+
 /*****************************************************************************************
-STATE 1
+STATE 1: Game starting (starting countdown; exits on timer delay; no user input)
 ******************************************************************************************/
 byte s8Count = 3;
-char s16CountChar[] = {'3'};
+//char s16CountChar[] = {'3'};
 
 final int s32DelayStart = 70;
 final int s32PositionStart = -90;
@@ -128,7 +130,6 @@ int s8Wheels = 0;
 void PolishExpressState1()
 {
   /* Variables local to this state */
-  String strCount = new String(s16CountChar);
   
   image(imgGameScreen, 0, 0);
   if( (s32Position % 10) == 0)
@@ -145,7 +146,7 @@ void PolishExpressState1()
   textAlign(CENTER, CENTER);
   textSize(100);
   fill(255);
-  text(strCount,500,200,300,300);
+  text("" + s8Count,440,150,300,300);
 
   /* Test mode to get to state 2 with inits */
   //s8ProgramState = 2;
@@ -159,10 +160,8 @@ void PolishExpressState1()
     /* Draw the background and count down box */
     //fill(0);
     //rect(500,200,300,300);
-
-    
+   
     s32Delay = s32DelayStart;
-    s16CountChar[0]--;
     s8Count--;
   }
   
@@ -175,7 +174,6 @@ void PolishExpressState1()
     s8Count = 3;
     s32Delay = s32DelayStart;
     s32Position = s32PositionStart;
-    s16CountChar[0] = '3';
     
     /* Preset State 2 variables */
     s8GraphicState = 0;
@@ -192,6 +190,7 @@ void PolishExpressState1()
   
 } /* end PolishExpressState1() */
 
+
 void PolishExpressState1Mouse()
 {
   /* Currently no mouse functionality here */
@@ -200,7 +199,7 @@ void PolishExpressState1Mouse()
 
 
 /*****************************************************************************************
-STATE 2
+STATE 2: Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level)
 ******************************************************************************************/
 void PolishExpressState2()
 {
@@ -208,7 +207,7 @@ void PolishExpressState2()
 
   /* Score box */
   fill(0);
-  rect(1050,25,125,80);
+  rect(1050,25,125,80, s32ButtonCornerRadius);
 
   textAlign(CENTER, CENTER);
   textSize(20);
@@ -241,12 +240,12 @@ void PolishExpressState2()
     if(IsMouseOverRect(as32GameButtons[i]))
     {
       fill(button_color_mouse_over);
-      rect(as32GameButtons[i][0], as32GameButtons[i][1], as32GameButtons[i][2], as32GameButtons[i][3]);
+      rect(as32GameButtons[i][0], as32GameButtons[i][1], as32GameButtons[i][2], as32GameButtons[i][3], s32ButtonCornerRadius);
     }
     else
     {
       fill(button_color);
-      rect(as32GameButtons[i][0], as32GameButtons[i][1], as32GameButtons[i][2], as32GameButtons[i][3]);      
+      rect(as32GameButtons[i][0], as32GameButtons[i][1], as32GameButtons[i][2], as32GameButtons[i][3], s32ButtonCornerRadius);      
     }
 
     textAlign(CENTER, CENTER);
@@ -259,6 +258,8 @@ void PolishExpressState2()
   {
     s32ButtonNumberPressed = s32NoButtonPressed;
     s8ProgramState = 3;
+    
+    /* Can't decide whether nor not to leave the sound on here... */
     if(bSoundOn)
     {
       //songGameScreen.stop();
@@ -277,6 +278,7 @@ void PolishExpressState2()
   
 } /* end PolishExpressState2() */
 
+
 void PolishExpressState2Mouse()
 {
   /* Check if mouse is currently over a button */
@@ -293,11 +295,12 @@ void PolishExpressState2Mouse()
 
 
 /*****************************************************************************************
-STATE 3
+STATE 3: Game over (good-bye screen; exits on "OK" or "Exit" buttons)
 ******************************************************************************************/
 void PolishExpressState3()
 {
   /* Variables local to this state */
+  
   /* Always draw the background and menu */
   DrawGameOverMenu();
   
@@ -307,7 +310,7 @@ void PolishExpressState3()
     if(IsMouseOverRect(as32EndButtons[i]))
     {
       fill(button_color_mouse_over);
-      rect(as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2], as32EndButtons[i][3]);
+      rect(as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2], as32EndButtons[i][3], s32ButtonCornerRadius);
       fill(button_text_color);
       text(strEndButtonNames.get(i), as32EndButtons[i][0], as32EndButtons[i][1], as32EndButtons[i][2] - 5, as32EndButtons[i][3] - 5);
     }
@@ -366,13 +369,14 @@ void PolishExpressState3()
 
     default:
     {
-      print("ERROR: undefined button press\n\r");
+      print("ERROR: undefined end button press\n\r");
       exit();
     } /* end default */    
     
   } /* end switch (s32ButtonNumberPressed) */
   
 } /* end PolishExpressState3() */
+
 
 void PolishExpressState3Mouse()
 {

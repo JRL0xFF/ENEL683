@@ -19,19 +19,22 @@ is increasingly difficult in speed and size of the bridges to solve.
 
 Improvements:
 - randomly generate PEs to solve
-- background music for start screen, gameplay (different levels), and end screen
+- Sound on/off button
 - sound effects for movements
 - PE optimization and better algorithm challenges to better meet the requirements of the assignment
 - Do "something" with the collection of PEs used.
 - Save high score to file so it persists
+- Generate 3 layers of background using random heights for the hills; use mouse x location % some value to define the range
+  of height and y value to define the trees, cows, or other ornaments that appear.  
+  Move these backgrounds at 3 different speeds for a cool parallax scrolling effect.
 */
 
 /* Audio */
 import processing.sound.*;
 SoundFile songMenuScreen;
 SoundFile songGameScreen;
-boolean bSoundOn = true;
-//boolean bSoundOn = false;
+//boolean bSoundOn = true;
+boolean bSoundOn = false;
  
 
 /* Images */
@@ -60,7 +63,8 @@ color button_background = color(92,101,121);
 /* Fonts (adapted from "Version3" example code in ENEL683 */
 //PFont fontMenu = createFont("Calibri-Bold", 48, true);
 
-
+PE_ShapeGrid ShapeGrid;
+PE_QuadShape QuadShape;
 /* 
 Program States
 0 = Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button)
@@ -77,6 +81,7 @@ int  s32HighScore = 0;
 
 /* Buttons - arrays are [BUTTON_NUMBER][RECTANGLE_PARAMETER] */
 final int s32NoButtonPressed = -1;
+final int s32ButtonCornerRadius = 7;
 
 int [][]as32MenuButtons;    
 final int s32NumMenuButtons = 3;
@@ -107,10 +112,10 @@ void setup()
   imgInstrScreen = loadImage("GameInstructions.jpg");
   imgGameScreen  = loadImage("GameBackground.jpg");
   
-  /* One-time menu and buttons setup */
+  /* One-time button setup */
+  
+  /* Main Menu Buttons */
   as32MenuButtons = new int[s32NumMenuButtons][4];
-  as32GameButtons = new int[s32NumGameButtons][4];
-  as32EndButtons  = new int[s32NumEndButtons][4];
   
   /* Menu START button */
   as32MenuButtons[s32MenuStartButton][0] = 875;
@@ -136,6 +141,9 @@ void setup()
   strMenuButtonNames.append("QUIT");
 
 
+  /* Game Screen Buttons */
+  as32GameButtons = new int[s32NumGameButtons][4];
+
   /* Game STOP button */
   as32GameButtons[s32MenuStartButton][0] = 25;
   as32GameButtons[s32MenuStartButton][1] = 25;
@@ -146,6 +154,9 @@ void setup()
   strGameButtonNames.append("STOP");
   
   
+  /* Round End Menu Buttons */
+  as32EndButtons  = new int[s32NumEndButtons][4];
+
   /* End RETRY button */
   as32EndButtons[s32MenuStartButton][0] = 525;
   as32EndButtons[s32MenuStartButton][1] = 250;
