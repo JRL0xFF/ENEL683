@@ -3,17 +3,17 @@ POLISH EXPRESSion Quadrilateral Shape Class
 
 This class provides the size and location definition for the rectangles used in "The Polish Expression" game.
 The class includes functions to print out the shape according to its dimensional size and the block size.
-Each Quadrilateral is built by squares that are s8Width x s8Height x s32BlockSize² pixels */
+Each Quadrilateral is built by squares that are s8Width x s8Height x s32BlockSize² pixels.
 
 */
 class PE_QuadShape 
 {
   private int  m_s32CurrentLocationX;
   private int  m_s32CurrentLocationY;
-  private byte m_s8Width;
-  private byte m_s8Height;
+  private int  m_s32Width;
+  private int  m_s32Height;
   private int  m_s32Rotation;
-  private char m_cName;
+  private char m_cLabel;
   
   private int  m_s32BlockSize = 10; 
 
@@ -22,23 +22,23 @@ class PE_QuadShape
   {
     m_s32CurrentLocationX = 0;
     m_s32CurrentLocationY = 0;
-    m_s8Width  = 1;
-    m_s8Height = 1;
+    m_s32Width  = 1;
+    m_s32Height = 1;
     m_s32Rotation = 0;
-    m_cName = '0';
+    m_cLabel = '0';
   } /* end public PE_QuadShape() default constructor */
 
   /* Constructor: create a valid shape of specified size, location, and rotation */
   public PE_QuadShape(int s32CurrentLocationX_, int s32CurrentLocationY_,
-                      byte s8Width_, byte s8Height_, 
+                      int s32Width_, int s32Height_, 
                       int s32Rotation_, char cName_) 
   {
     m_s32CurrentLocationX = s32CurrentLocationX_;
     m_s32CurrentLocationY = s32CurrentLocationY_;
-    m_s8Width  = s8Width_;
-    m_s8Height = s8Height_;
+    m_s32Width  = s32Width_;
+    m_s32Height = s32Height_;
     m_s32Rotation = s32Rotation_;
-    m_cName = cName_;
+    m_cLabel = cName_;
   } /* end public PE_QuadShape() constructor */
 
   /* Copy Constructor */
@@ -46,42 +46,49 @@ class PE_QuadShape
   {
     this.m_s32CurrentLocationX = Source_.m_s32CurrentLocationX;
     this.m_s32CurrentLocationY = Source_.m_s32CurrentLocationY;
-    this.m_s8Width = Source_.m_s8Width;
-    this.m_s8Height = Source_.m_s8Height;
+    this.m_s32Width = Source_.m_s32Width;
+    this.m_s32Height = Source_.m_s32Height;
     this.m_s32Rotation = Source_.m_s32Rotation;
-    this.m_cName = Source_.m_cName;
+    this.m_cLabel = Source_.m_cLabel;
   }
   
   
   /* Public functions to access members */
-  public s32 getLocX() 
+  public int getLocX() 
   {
     return m_s32CurrentLocationX;
   } /* end getLocX() */
 
   
-  public s32 getLocY() 
+  public int getLocY() 
   {
     return m_s32CurrentLocationY;
   } /* end getLocY() */
 
   
-  public s8 getWidth() 
+  public int getWidth() 
   {
-    return m_s8Width;
+    return m_s32Width;
   } /* end getWidth() */
 
 
-  public s8 getHeight() 
+  public int getHeight() 
   {
-    return m_s8Height;
+    return m_s32Height;
   } /* end getHeight() */
     
   
-  public s32 getRotation() 
+  public int getRotation() 
   {
     return m_s32Rotation;
   } /* end getRotation() */  
+
+  
+  public char getLabel() 
+  {
+    return m_cLabel;
+  } /* end getLabel() */  
+
 
   /* Public functions to update members */  
   public void setLocation(int s32NewX_, int s32NewY_) 

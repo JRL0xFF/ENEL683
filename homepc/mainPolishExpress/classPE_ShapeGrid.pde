@@ -51,7 +51,7 @@ class PE_ShapeGrid
     m_as8EntryListWidths  = new byte[1];
     m_as8EntryListHeights = new byte[1];
     
-    m_acEntryListNames[0]     = '\0'
+    m_acEntryListNames[0]     = '\0';
     m_as8EntryListWidths[0]  = 0;
     m_as8EntryListHeights[0] = 0;
     

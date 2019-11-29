@@ -63,8 +63,10 @@ color button_background = color(92,101,121);
 /* Fonts (adapted from "Version3" example code in ENEL683 */
 //PFont fontMenu = createFont("Calibri-Bold", 48, true);
 
+/* Data structures for game */
 PE_ShapeGrid ShapeGrid;
 PE_QuadShape QuadShape;
+
 /* 
 Program States
 0 = Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button)
@@ -79,7 +81,7 @@ byte s8GameLevel = 2;
 int  s32CurrentScore = 0;
 int  s32HighScore = 0;
 
-/* Buttons - arrays are [BUTTON_NUMBER][RECTANGLE_PARAMETER] */
+/* Buttons - arrays are [BUTTON_NUMBER][RECTANGLE_PARAMETERS] */
 final int s32NoButtonPressed = -1;
 final int s32ButtonCornerRadius = 7;
 
