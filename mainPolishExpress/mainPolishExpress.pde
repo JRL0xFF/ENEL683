@@ -2,7 +2,7 @@
 POLISH EXPRESSion OVERVIEW (in case you missed it, this is a take on the movie "Polar Express" hence the train)
 
 Credits:
-The Polar Express is an awesome movie in this game is an obvious rip-off of the imagery.  Hopefully this game
+The Polar Express is an awesome movie and this game is an obvious rip-off of it.  Hopefully this game
 inspires people to check out the movie!
 
 Menu button code is taken from "Version3" example program provided in ENEL683.  Author unknown, but thank you! 

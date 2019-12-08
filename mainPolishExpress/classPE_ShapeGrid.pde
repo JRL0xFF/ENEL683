@@ -116,6 +116,38 @@ class PE_ShapeGrid
     }  
   } /* end public PE_ShapeGrid copy constructor */
   
+  /* Comparison */
+  public boolean equals(PE_ShapeGrid Source_) 
+  {
+    if(Source_ == null)
+    {
+      return false;
+    }
+    
+    /* First check that sizes match */
+    if( (this.m_s32GridWidth != Source_.m_s32GridWidth) ||
+        (this.m_s32GridHeight != Source_.m_s32GridHeight) )
+    {
+      return false;
+    }
+    
+    /* Sizes match, so loop through to compare all elements */
+    for(int i = 0; i < this.m_s32GridHeight)
+    {
+      for(int j = 0; j < this.m_s32GridWidth)
+      {
+        if(this.m_aacGrid[i][j] != Source_.m_aacGrid[i][j])
+        {
+          return false;
+        }
+      }
+    }
+    
+    /* Made it this far, so objects match */
+    return true;
+        
+  } /* end equals() */
+  
   
   /* Public functions to access members */
   public int getWidth() 
@@ -354,7 +386,6 @@ class PE_ShapeGrid
       s32FontHeight = 48;
     }
 
-    //textFont(fontBlock, s32FontHeight);
     textAlign(CENTER, CENTER);
 
     /* Draw each box and fill in if the box contains a char. */

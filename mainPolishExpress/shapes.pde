@@ -22,12 +22,16 @@ one of the three positions
 */
 void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, int s32Mode_)
 {
+  /* Would be nice to scale the size of the train easily, but has implications with other
+  parts of the code and needs some effort to make work: must keep at 1.0 for now. */
+  final float fDrawingScale = 1.0;
+
   /* The main train */
 
   /* Offset the drawing by the amount indicated */
   translate(s8TopLeftX_, s8TopLeftY_);
-  //translate(300,200);
-  //scale(2.0);
+  scale(fDrawingScale);
+  
   /* The gold parts of the train */
   fill(gold);
   quad(0,0, 35,0, 35,5, 0,5);
@@ -63,7 +67,6 @@ void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, int s32Mode_)
     
   /* Mode-specific train wheel spokes */
   strokeWeight(2);
-  //s8Mode = 3;
   switch(s32Mode_)
   {
     case 0:
@@ -129,8 +132,12 @@ void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, int s32Mode_)
 
   } /* end switch(s32Mode_) */
 
+
   /* The train car */
+  //scale(1 / fDrawingScale);
   translate(-150,0);
+  //scale(fDrawingScale);
+
   fill(blue);
   rect(0,35,130,17);
   fill(black);
@@ -190,6 +197,8 @@ void shapeTrain(int s8TopLeftX_, int s8TopLeftY_, int s32Mode_)
   } /* end switch(s32Mode_) */
 
   /* Clear the translate offsets for functions following this */
+  scale(1 / fDrawingScale);
   translate(-s8TopLeftX_ + 150, -s8TopLeftY_);
+
 
 } /* end shapeTrain() */
