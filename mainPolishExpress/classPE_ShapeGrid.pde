@@ -14,7 +14,7 @@ in color with the name of the object (e.g. QuadShape 'A' 2 x 3 blocks with block
 
 API
 public boolean AddQuadShape(PE_QuadShape InputQuadShape_, int s32TopLeftX_, int s32TopLeftY_)
-public boolean RemoveQuadShape(char s8Name_)
+public boolean RemoveQuadShape(char s32Label_)
 public void DrawShapeGrid(int s32TopLeftX_, int s32TopLeftX_, int s32BlockSize_) 
 */
 
@@ -26,15 +26,15 @@ class PE_ShapeGrid
 {
   private int m_s32GridWidth;
   private int m_s32GridHeight;
-  private char[][] m_aacGrid;
+  private int[][] m_aas32Grid;
   
   /* Track entries in the grid with a trio of data points (a sparse matrix); maximum entries when Width x Height 1x1 entries.
-  This is redundant to the m_aacGrid which we don't really need if we have the entry data but 
+  This is redundant to the m_aas32Grid which we don't really need if we have the entry data but 
   it makes it easier to visualize so we'll keep both the grid 2D array and the entry list */
-  private char[] m_acEntryListNames;
+  private int[] m_as32EntryListNames;
   private int[] m_as32EntryListWidths;
   private int[] m_as32EntryListHeights;
-  private int m_s32TotalEntries;
+  private int   m_s32TotalEntries;
 
   /* Default constructor: create and initialize a 1x1 grid (default constructor should not be used) */
   public PE_ShapeGrid() 
@@ -42,16 +42,16 @@ class PE_ShapeGrid
     /* Initialize grid size */
     m_s32GridWidth  = 1;
     m_s32GridHeight = 1;
-    m_aacGrid = new char[m_s32GridHeight][m_s32GridWidth];
-    m_aacGrid[0][0] = '\0';
+    m_aas32Grid = new int[m_s32GridHeight][m_s32GridWidth];
+    m_aas32Grid[0][0] = -1;
 
     /* Initialize grid tracking values */
     m_s32TotalEntries = 0;
-    m_acEntryListNames     = new char[1];
+    m_as32EntryListNames   = new int[1];
     m_as32EntryListWidths  = new int[1];
     m_as32EntryListHeights = new int[1];
     
-    m_acEntryListNames[0]  = '\0';
+    m_as32EntryListNames[0]  = -1;
     m_as32EntryListWidths[0]  = 0;
     m_as32EntryListHeights[0] = 0;
     
@@ -66,9 +66,9 @@ class PE_ShapeGrid
     /* Create private members */
     m_s32GridWidth  = s32Width_;
     m_s32GridHeight = s32Height_;
-    m_aacGrid = new char[m_s32GridHeight][m_s32GridWidth];
+    m_aas32Grid = new int[m_s32GridHeight][m_s32GridWidth];
 
-    m_acEntryListNames     = new char[m_s32GridHeight * m_s32GridWidth];
+    m_as32EntryListNames   = new int[m_s32GridHeight * m_s32GridWidth];
     m_as32EntryListWidths  = new int[m_s32GridHeight * m_s32GridWidth];
     m_as32EntryListHeights = new int[m_s32GridHeight * m_s32GridWidth];
        
@@ -78,8 +78,8 @@ class PE_ShapeGrid
     {
       for(int j = 0; j < m_s32GridWidth; j++)
       {
-        m_aacGrid[i][j] = '\0';
-        m_acEntryListNames[s32EntryCounter]  = '\0';
+        m_aas32Grid[i][j] = -1;
+        m_as32EntryListNames[s32EntryCounter]  = -1;
         m_as32EntryListWidths[s32EntryCounter]  = 0;
         m_as32EntryListHeights[s32EntryCounter] = 0;
         s32EntryCounter++;
@@ -96,9 +96,9 @@ class PE_ShapeGrid
     /* Create private members */
     this.m_s32GridWidth = Source_.m_s32GridWidth;
     this.m_s32GridHeight = Source_.m_s32GridHeight;
-    this.m_aacGrid = new char[this.m_s32GridHeight][this.m_s32GridWidth];
+    this.m_aas32Grid = new int[this.m_s32GridHeight][this.m_s32GridWidth];
 
-    this.m_acEntryListNames    = new char[this.m_s32GridHeight * this.m_s32GridWidth];
+    this.m_as32EntryListNames   = new int[this.m_s32GridHeight * this.m_s32GridWidth];
     this.m_as32EntryListWidths  = new int[this.m_s32GridHeight * this.m_s32GridWidth];
     this.m_as32EntryListHeights = new int[this.m_s32GridHeight * this.m_s32GridWidth];
     
@@ -107,8 +107,8 @@ class PE_ShapeGrid
     {
       for(int j = 0; j < this.m_s32GridWidth; j++)
       {
-        this.m_aacGrid[i][j] = Source_.m_aacGrid[i][j];
-        this.m_acEntryListNames[s32EntryCounter]     = Source_.m_acEntryListNames[s32EntryCounter];
+        this.m_aas32Grid[i][j] = Source_.m_aas32Grid[i][j];
+        this.m_as32EntryListNames[s32EntryCounter]   = Source_.m_as32EntryListNames[s32EntryCounter];
         this.m_as32EntryListWidths[s32EntryCounter]  = Source_.m_as32EntryListWidths[s32EntryCounter];
         this.m_as32EntryListHeights[s32EntryCounter] = Source_.m_as32EntryListHeights[s32EntryCounter];
         s32EntryCounter++;
@@ -125,18 +125,18 @@ class PE_ShapeGrid
     }
     
     /* First check that sizes match */
-    if( (this.m_s32GridWidth != Source_.m_s32GridWidth) ||
+    if( (this.m_s32GridWidth  != Source_.m_s32GridWidth) ||
         (this.m_s32GridHeight != Source_.m_s32GridHeight) )
     {
       return false;
     }
     
     /* Sizes match, so loop through to compare all elements */
-    for(int i = 0; i < this.m_s32GridHeight)
+    for(int i = 0; i < this.m_s32GridHeight; i++)
     {
-      for(int j = 0; j < this.m_s32GridWidth)
+      for(int j = 0; j < this.m_s32GridWidth; j++)
       {
-        if(this.m_aacGrid[i][j] != Source_.m_aacGrid[i][j])
+        if(this.m_aas32Grid[i][j] != Source_.m_aas32Grid[i][j])
         {
           return false;
         }
@@ -197,7 +197,7 @@ class PE_ShapeGrid
     {
       while( (j < (s32TopLeftX_ + InputQuadShape_.getWidth() )) && (!bOccupied))
       {
-        if(m_aacGrid[i][j] != '\0')
+        if(m_aas32Grid[i][j] != -1)
         {
           bOccupied = true;
         }
@@ -213,8 +213,8 @@ class PE_ShapeGrid
       return false;
     }
     
-    /* Otherwise, change all corresponding spaces in m_aacGrid to the QuadShape name.  
-    Debate if it's more efficient to do this on a copy of m_aacGrid in the search loop above... */
+    /* Otherwise, change all corresponding spaces in m_aas32Grid to the QuadShape name.  
+    Debate if it's more efficient to do this on a copy of m_aas32Grid in the search loop above... */
     i = s32TopLeftX_;
     j = s32TopLeftX_;
     
@@ -222,7 +222,7 @@ class PE_ShapeGrid
     {
       while( j < (s32TopLeftX_ + InputQuadShape_.getWidth())) 
       {
-        m_aacGrid[i][j] = InputQuadShape_.getLabel();
+        m_aas32Grid[i][j] = InputQuadShape_.getLabel();
         j++;
       }
       i++;
@@ -231,7 +231,7 @@ class PE_ShapeGrid
     
     /* Find an empty location in the tracking struct */
     i = 0;
-    while(m_acEntryListNames[i] != '\0')
+    while(m_as32EntryListNames[i] != -1)
     {
       i++;
     }
@@ -239,7 +239,7 @@ class PE_ShapeGrid
     /* Update the entry tracking struct */
     m_as32EntryListWidths[i]  = InputQuadShape_.getWidth();
     m_as32EntryListHeights[i] = InputQuadShape_.getHeight();
-    m_acEntryListNames[i]     = InputQuadShape_.getLabel();
+    m_as32EntryListNames[i]   = InputQuadShape_.getLabel();
     m_s32TotalEntries++;
     
     return true;
@@ -248,23 +248,23 @@ class PE_ShapeGrid
 
 
   /*!************************************************************************************************
-  @fn public boolean RemoveQuadShape(char s8Name_)
+  @fn public boolean RemoveQuadShape(int s32Label_)
   @brief Removes a QuadShape from the matrix if it exists in the matrix
   
   Requires
-  @param s8Name_ Single char name of the QuadShape in ShapeGrid to be removed
-  m_s32TotalEntries must be accurately kept
+  - m_s32TotalEntries must be accurately kept
+  @param s32Label_ Numerical name of the QuadShape in ShapeGrid to be removed
   
   Promises
   @returns TRUE if the QuadShape was present in ShapeGrid and now removed
-    > s8Name is cleared from m_acEntryListNames and the corresponding values for 
+    > s32Label_ is reset to -1 from m_as32EntryListNames and the corresponding values for 
       m_as32EntryListWidths and m_as32EntryListHeights are set to 0
     > m_s32TotalEntries decremented
-    > m_aacGrid values corresponding to the Quadshape are set to '\0'
+    > m_aas32Grid values corresponding to the Quadshape are set to -1
   @returns FALSE if the QuadShape was not in ShapeGrid; ShapeGrid and list entries unchanged
 
   */
-  public boolean RemoveQuadShape(char s8Name_)
+  public boolean RemoveQuadShape(int s32Label_)
   {
     boolean bFoundEntry = false;
     int s32EntryListIndex = 0;
@@ -277,7 +277,7 @@ class PE_ShapeGrid
     /* Search for the entry; s32EntryListIndex will hold the index if found */
     while( (s32EntryListIndex < m_s32TotalEntries) && (!bFoundEntry) )
     {
-      if(m_acEntryListNames[s32EntryListIndex] == s8Name_)
+      if(m_as32EntryListNames[s32EntryListIndex] == s32Label_)
       {
         bFoundEntry = true;
       }
@@ -297,18 +297,18 @@ class PE_ShapeGrid
     s32EntryWidth = m_as32EntryListWidths[s32EntryListIndex];
     s32EntryHeight = m_as32EntryListHeights[s32EntryListIndex];
 
-    /* Remove the QuadShape from the grid starting by finding the first instance of s8Name_ */
+    /* Remove the QuadShape from the grid starting by finding the first instance of s32Label_ */
     s32GridLocationWidth = 0;
     s32GridLocationHeight = 0;
-    bFoundEntry = false;
-    
-    /* Loop through the whole grid until the first instance of s8Name_ is found which leaves
+   
+    /* Loop through the whole grid until the first instance of s32Label_ is found which leaves
     s32GridLocationWidth and s32GridLocationHeight as the index of the QuadShape to remove in ShapeGrid */ 
-    while( (s32GridLocationHeight < m_s32GridHeight) && (!bFoundEntry) )
+    bFoundEntry = false;
+     while( (s32GridLocationHeight < m_s32GridHeight) && (!bFoundEntry) )
     {
       while( (s32GridLocationWidth < m_s32GridWidth) && (!bFoundEntry) )
       {
-        if(m_aacGrid[s32GridLocationHeight][s32GridLocationWidth] == s8Name_)
+        if(m_aas32Grid[s32GridLocationHeight][s32GridLocationWidth] == s32Label_)
         {
           bFoundEntry = true;
         }
@@ -327,7 +327,7 @@ class PE_ShapeGrid
     }    
     
     /* Now we know where in ShapeGrid the start of QuadShape is, and we have the size of the QuadShape
-    from the entry list.  Loop through m_aacGrid and reset the values to '\0'. */
+    from the entry list.  Loop through m_aas32Grid and reset the values to -1. */
     int i = s32GridLocationHeight;
     int j = s32GridLocationWidth;
     
@@ -335,7 +335,7 @@ class PE_ShapeGrid
     {
       while( j < (s32GridLocationWidth + m_as32EntryListWidths[s32EntryListIndex]) ) 
       {
-        m_aacGrid[i][j] = '\0';
+        m_aas32Grid[i][j] = -1;
         j++;
       }
       i++;
@@ -343,14 +343,14 @@ class PE_ShapeGrid
     }    
         
     /* Remove the entry from the tracking struct */
-    m_acEntryListNames[s32EntryListIndex]    = '\0';
+    m_as32EntryListNames[s32EntryListIndex]   = -1;
     m_as32EntryListWidths[s32EntryListIndex]  = 0;
     m_as32EntryListHeights[s32EntryListIndex] = 0;
     m_s32TotalEntries--;
     
     return true;
     
-  } /* end public boolean RemoveQuadShape(char s8Name_) */
+  } /* end public boolean RemoveQuadShape(char s32Label_) */
   
 
   /*!************************************************************************************************
@@ -393,7 +393,7 @@ class PE_ShapeGrid
     {
       for(int j = 0; j < m_s32GridWidth; j++)
       {
-        if(m_aacGrid[i][j] == '\0')
+        if(m_aas32Grid[i][j] == -1)
         {
           /* Draw an empty box */
           fill(255);
@@ -407,7 +407,7 @@ class PE_ShapeGrid
           if(s32FontHeight > 8)
           {
             fill(255);
-            text(m_aacGrid[i][j], i * s32BlockSize_, j * s32BlockSize_);
+            text(m_aas32Grid[i][j], i * s32BlockSize_, j * s32BlockSize_);
           }
         }
       }

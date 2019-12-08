@@ -8,14 +8,14 @@ Each Quadrilateral is built by squares that are s8Width x s8Height x s32BlockSiz
 */
 class PE_QuadShape 
 {
-  private int  m_s32CurrentLocationX;
-  private int  m_s32CurrentLocationY;
-  private int  m_s32Width;
-  private int  m_s32Height;
-  private int  m_s32Rotation;
-  private char m_cLabel;
+  private int m_s32CurrentLocationX;
+  private int m_s32CurrentLocationY;
+  private int m_s32Width;
+  private int m_s32Height;
+  private int m_s32Rotation;
+  private int m_s32Label;
   
-  private int  m_s32BlockSize = 10; 
+  private int m_s32BlockSize = 10; 
 
   /* Default constructor: create a valid shape at 0,0 but this should not be used */
   public PE_QuadShape() 
@@ -25,20 +25,20 @@ class PE_QuadShape
     m_s32Width  = 1;
     m_s32Height = 1;
     m_s32Rotation = 0;
-    m_cLabel = '0';
+    m_s32Label = 0;
   } /* end public PE_QuadShape() default constructor */
 
   /* Constructor: create a valid shape of specified size, location, and rotation */
   public PE_QuadShape(int s32CurrentLocationX_, int s32CurrentLocationY_,
                       int s32Width_, int s32Height_, 
-                      int s32Rotation_, char cName_) 
+                      int s32Rotation_, int s32Label_) 
   {
     m_s32CurrentLocationX = s32CurrentLocationX_;
     m_s32CurrentLocationY = s32CurrentLocationY_;
     m_s32Width  = s32Width_;
     m_s32Height = s32Height_;
     m_s32Rotation = s32Rotation_;
-    m_cLabel = cName_;
+    m_s32Label = s32Label_;
   } /* end public PE_QuadShape() constructor */
 
   /* Copy Constructor */
@@ -49,7 +49,7 @@ class PE_QuadShape
     this.m_s32Width = Source_.m_s32Width;
     this.m_s32Height = Source_.m_s32Height;
     this.m_s32Rotation = Source_.m_s32Rotation;
-    this.m_cLabel = Source_.m_cLabel;
+    this.m_s32Label = Source_.m_s32Label;
   }
   
   
@@ -84,9 +84,9 @@ class PE_QuadShape
   } /* end getRotation() */  
 
   
-  public char getLabel() 
+  public int getLabel() 
   {
-    return m_cLabel;
+    return m_s32Label;
   } /* end getLabel() */  
 
 
