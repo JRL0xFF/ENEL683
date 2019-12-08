@@ -19,7 +19,7 @@ is increasingly difficult in speed and size of the bridges to solve.
 
 Improvements:
 - randomly generate PEs to solve
-- Sound on/off button
+- sound on/off button
 - sound effects for movements
 - PE optimization and better algorithm challenges to better meet the requirements of the assignment
 - Do "something" with the collection of PEs used.

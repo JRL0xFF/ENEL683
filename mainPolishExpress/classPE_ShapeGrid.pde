@@ -108,7 +108,7 @@ class PE_ShapeGrid
       for(int j = 0; j < this.m_s32GridWidth; j++)
       {
         this.m_aacGrid[i][j] = Source_.m_aacGrid[i][j];
-        this.m_acEntryListNames[s32EntryCounter]    = Source_.m_acEntryListNames[s32EntryCounter];
+        this.m_acEntryListNames[s32EntryCounter]     = Source_.m_acEntryListNames[s32EntryCounter];
         this.m_as32EntryListWidths[s32EntryCounter]  = Source_.m_as32EntryListWidths[s32EntryCounter];
         this.m_as32EntryListHeights[s32EntryCounter] = Source_.m_as32EntryListHeights[s32EntryCounter];
         s32EntryCounter++;
