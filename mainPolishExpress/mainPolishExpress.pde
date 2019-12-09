@@ -35,7 +35,11 @@ SoundFile songMenuScreen;
 SoundFile songGameScreen;
 //boolean bSoundOn = true;
 boolean bSoundOn = false;
- 
+
+/* Controls */
+import controlP5.*;
+import java.util.*;
+ControlP5 DifficultyControl;
 
 /* Images */
 PImage imgTitleScreen;
@@ -60,12 +64,12 @@ color button_color_mouse_over = color(173,193,234);
 color button_text_color = color(255,255,255);
 color button_background = color(92,101,121);
 
-/* Fonts (adapted from "Version3" example code in ENEL683 */
-//PFont fontMenu = createFont("Calibri-Bold", 48, true);
-
 /* Data structures for game */
-PE_ShapeGrid ShapeGrid;
+PE_ShapeGrid UserSolutionGrid;
 PE_QuadShape QuadShape;
+PE_SlicingTree CurrentSlicingTree;
+int[] as32CurrentPE;
+
 
 /* 
 Program States
@@ -77,9 +81,17 @@ Program States
 byte s8ProgramState = 1;
 
 /* Program variables */
-byte s8GameLevel = 2;
-int  s32CurrentScore = 0;
-int  s32HighScore = 0;
+int s32GameLevel = 1;
+int s32CurrentScore = 0;
+int s32HighScore = 0;
+
+/* ShapeGrid sizes for the various game levels */
+final int s32EasyWidth = 5;
+final int s32EasyHeight = 4;
+final int s32MediumWidth = 7;
+final int s32MediumHeight = 5;
+final int s32HardWidth = 9;
+final int s32HardHeight = 6;
 
 /* Buttons - arrays are [BUTTON_NUMBER][RECTANGLE_PARAMETERS] */
 final int s32NoButtonPressed = -1;
@@ -182,7 +194,22 @@ void setup()
   strEndButtonNames.append("MAIN MENU");
   strEndButtonNames.append("QUIT");
 
-  
+
+  /* Difficulty dropdown */
+  DifficultyControl = new ControlP5(this);
+  List DifficultyList = Arrays.asList("Easy", "Medium", "Hard");
+  DifficultyControl.addScrollableList("Difficulty")
+     .setPosition(720, 525)
+     .setSize(100, 100)
+     .setBarHeight(20)
+     .setItemHeight(20)
+     .addItems(DifficultyList)
+     .setOpen(false)
+     .setValue(0)
+     .setBarVisible(true);
+
+  /* Game data structures */
+ 
   /* Setup audio and opening screen song */
   if(bSoundOn)
   {

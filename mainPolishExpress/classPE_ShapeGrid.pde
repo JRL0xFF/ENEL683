@@ -20,8 +20,6 @@ public void DrawShapeGrid(int s32TopLeftX_, int s32TopLeftX_, int s32BlockSize_)
 
 color colorFilledBlock = color(63,2,178);
 
-//PFont fontBlock = createFont("Arial", 20, true);
-
 class PE_ShapeGrid 
 {
   private int m_s32GridWidth;
@@ -352,9 +350,45 @@ class PE_ShapeGrid
     
   } /* end public boolean RemoveQuadShape(char s32Label_) */
   
-
+    
   /*!************************************************************************************************
-  @fn public void DrawShapeGrid(int s32TopLeftX_, int s32TopLeftX_, int s32BlockSize_) 
+  @fn public void ClearShapeGrid() 
+  @brief The ShapeGrid is completely cleared / reset
+  
+  Requires
+  - None
+  
+  Promises
+  - all names, widths, and heights are zeroed
+  - Entry list and m_s32TotalEntries reset to 0
+  
+  */
+  public void ClearShapeGrid() 
+  {
+    
+    /* Reset grid values */
+    for(int i = 0; i < m_s32GridHeight; i++)
+    {
+      for(int j = 0; j < m_s32GridWidth; j++)
+      {
+        m_aas32Grid[i][j] = -1;
+      }
+    }   
+    
+    /* Reset EntryList values */
+    for(int i = 0; i < m_s32TotalEntries; i++)
+    {
+      m_as32EntryListNames[i]   = -1;
+      m_as32EntryListWidths[i]  = 0;
+      m_as32EntryListHeights[i] = 0;
+    }
+    m_s32TotalEntries = 0;
+
+  } /* end public ClearShapeGrid */
+  
+  
+  /*!************************************************************************************************
+  @fn public void DrawShapeGrid(int s32TopLeftX_, int s32TopLeftY_, int s32BlockSize_) 
   @brief The ShapeGrid is printed with the top left corner specifed at TopLeftX, TopLeftY.
   
   Each ShapeGrid matrix entry is printed as a box of size s32BlockSize x s32BlockSize. 
@@ -365,7 +399,7 @@ class PE_ShapeGrid
   
   Requires
   @param s32TopLeftX_  Starting X coordinate of top left pixel of the ShapeGrid
-  @param s32TopLeftX_  Starting Y coordinate of top left pixel of the ShapeGrid
+  @param s32TopLeftY_  Starting Y coordinate of top left pixel of the ShapeGrid
   @param s32BlockSize Size of the edge of a box; boxes are always square and should be at least 10 pixels  
   
   Promises
@@ -397,13 +431,17 @@ class PE_ShapeGrid
         {
           /* Draw an empty box */
           fill(255);
-          rect( (i * s32BlockSize_), (j * s32BlockSize_), s32BlockSize_, s32BlockSize_);
+          rect( (s32TopLeftX_ + (j * s32BlockSize_)), 
+                (s32TopLeftY_ + (i * s32BlockSize_)),
+                 s32BlockSize_, s32BlockSize_);
         }
         else
         {
           /* Draw a filled box and add the font if the block is large enough */ 
           fill(colorFilledBlock);
-          rect( (i * s32BlockSize_), (j * s32BlockSize_), s32BlockSize_, s32BlockSize_);
+          rect( (s32TopLeftX_ + (j * s32BlockSize_)), 
+                (s32TopLeftY_ + (i * s32BlockSize_)),
+                 s32BlockSize_, s32BlockSize_);
           if(s32FontHeight > 8)
           {
             fill(255);

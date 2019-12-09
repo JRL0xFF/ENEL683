@@ -11,6 +11,21 @@ byte s8GraphicState;
 int  s32GraphicDelayValue;   
 int  s32GraphicChangeDelay;
 
+int s32UserGridLocationX;
+int s32UserGridLocationY;
+
+final int s32UserGridXEasy = 550;
+final int s32UserGridYEasy = 300;
+
+final int s32UserGridXMedium = 525;
+final int s32UserGridYMedium = 275;
+
+final int s32UserGridXHard = 500;
+final int s32UserGridYHard = 250;
+
+final int s32GridBoxSize = 20;
+
+PE_TreeNode TestTreeNode;
 
 /*****************************************************************************************
 STATE 0: Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button)
@@ -63,6 +78,47 @@ void PolishExpressState0()
       }
 
       bShowInstructions = false;
+      
+      /* Set up the game parameters for the next state */
+      DifficultyControl.get(ScrollableList.class, "Difficulty").setBarVisible(false);
+      s32GameLevel = int(DifficultyControl.get(ScrollableList.class, "Difficulty").getValue() ) + 1;
+
+      /* Create the solution grids and game pieces; any previous grids should be garbage collected, right? */
+      if(s32GameLevel == 3)
+      {
+        UserSolutionGrid = new PE_ShapeGrid(s32HardWidth, s32HardHeight);
+        s32UserGridLocationX = s32UserGridXHard;
+        s32UserGridLocationY = s32UserGridYHard;
+      }
+      else if (s32GameLevel == 2)
+      {
+        UserSolutionGrid = new PE_ShapeGrid(s32MediumWidth, s32MediumHeight);
+        s32UserGridLocationX = s32UserGridXMedium;
+        s32UserGridLocationY = s32UserGridYMedium;
+      }
+      else
+      {
+        UserSolutionGrid = new PE_ShapeGrid(s32EasyWidth, s32EasyHeight);
+        s32UserGridLocationX = s32UserGridXEasy;
+        s32UserGridLocationY = s32UserGridYEasy;
+        
+        /* Get a PE and copy into the current expression */
+        as32CurrentPE = new int[aas32PolishExpressionsEasy[0].length];
+        for(int i = 0; i < as32CurrentPE.length; i++)
+        {
+          as32CurrentPE[i] = aas32PolishExpressionsEasy[0][i];
+        }
+        
+        /* Test create a PE_TreeNode */
+        TestTreeNode = new PE_TreeNode();
+        
+        /* Create the slicing tree */
+        CurrentSlicingTree = new PE_SlicingTree(as32CurrentPE.length, aas32PolishExpressionsEasy[0],
+                                                aas32EasyNodeWidths[0], aas32EasyNodeHeights[0],
+                                                aas32EasyNodeRightChild[0], aas32EasyNodeLeftChild[0]);
+        
+      }
+          
       s8ProgramState = 1;
       image(imgGameScreen, 0, 0);
       shapeTrain(190, 490, 0);
@@ -118,7 +174,6 @@ void PolishExpressState0Mouse()
 STATE 1: Game starting (starting countdown; exits on timer delay; no user input)
 ******************************************************************************************/
 byte s8Count = 3;
-//char s16CountChar[] = {'3'};
 
 final int s32DelayStart = 70;
 final int s32PositionStart = -90;
@@ -149,7 +204,6 @@ void PolishExpressState1()
   text("" + s8Count,440,150,300,300);
 
   /* Test mode to get to state 2 with inits */
-  //s8ProgramState = 2;
   if(s32Delay == 0)
   {
     if(s8Count == 0)
@@ -158,9 +212,6 @@ void PolishExpressState1()
     }
 
     /* Draw the background and count down box */
-    //fill(0);
-    //rect(500,200,300,300);
-   
     s32Delay = s32DelayStart;
     s8Count--;
   }
@@ -177,16 +228,21 @@ void PolishExpressState1()
     
     /* Preset State 2 variables */
     s8GraphicState = 0;
-    s32GraphicDelayValue = 30 / s8GameLevel;   
+    s32GraphicDelayValue = int(30 / s32GameLevel);   
     s32GraphicChangeDelay = s32GraphicDelayValue;
     image(imgGameScreen, 0, 0);
     shapeTrain(190, 490, 0);
+    
+    /* Print the User solution grid */
+    UserSolutionGrid.DrawShapeGrid(s32UserGridLocationX, s32UserGridLocationY, s32GridBoxSize);
+
+    /* Print the available blocks */
 
     if(bSoundOn)
     {
       songGameScreen.loop();
     }
-}
+  } /* end if(s8ProgramState != 1) */
   
 } /* end PolishExpressState1() */
 
@@ -334,6 +390,8 @@ void PolishExpressState3()
       image(imgGameScreen, 0, 0);
       shapeTrain(190, 490, 0);
       
+      UserSolutionGrid.ClearShapeGrid();
+      
       if(bSoundOn)
       {
         songGameScreen.stop();
@@ -348,6 +406,8 @@ void PolishExpressState3()
     {      
       s32ButtonNumberPressed = s32NoButtonPressed;
       s8ProgramState = 0;
+      DifficultyControl.get(ScrollableList.class, "Difficulty").setBarVisible(true);
+
 
       if(bSoundOn)
       {

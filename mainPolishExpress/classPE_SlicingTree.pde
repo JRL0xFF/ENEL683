@@ -43,7 +43,7 @@ class PE_TreeNode
   private int m_s32ChildRight;
   private int m_s32ChildLeft;
 
-  /* Default constructor: create an empty node - this should not be used */
+  /* Default constructor: create an empty node */
   public PE_TreeNode() 
   {
     m_s32NodeType   = 0;
@@ -53,6 +53,7 @@ class PE_TreeNode
     m_s32ChildLeft  = -1;
   } /* end public PE_TreeNode() default constructor */
 
+  
   /* Constructor: create a valid PE_TreeNode */
   public PE_TreeNode(int s32NodeType_, int s32LeafWidth_,int s32LeafHeight_, 
                      int s32ChildRight_, int s32ChildLeft_) 
@@ -148,7 +149,6 @@ class PE_TreeNode
 } /* end class PE_TreeNode */
 
 
-
 /* 
 POLISH EXPRESSion SlicingTree Class
 
@@ -177,7 +177,7 @@ class PE_SlicingTree
   /* Default constructor: create an empty tree of size 1 */
   public PE_SlicingTree() 
   {
-    m_aTreeNodes  = new PE_TreeNode[1];
+    m_aTreeNodes[1]  = new PE_TreeNode();
     m_s32TreeSize = 1;
     
     m_aTreeNodes[0].setNodeType(0);
@@ -188,23 +188,26 @@ class PE_SlicingTree
 
   } /* end public PE_SlicingTree() default constructor */
 
-  /* Constructor: create a new empty PE_SlicingTree of the required size */
-  public PE_SlicingTree(int s32TreeSize_) 
+  /* Constructor: create a new PE_SlicingTree of the required size and populate it */
+  public PE_SlicingTree(int s32TreeSize_, int[] as32NodeTypes_,
+                        int[] as32NodeWidths_, int[] as32NodeHeights_, 
+                        int[] as32NodeChildRights_, int[] as32NodeChildLefts_) 
   {
     /* Create and initialize all the nodes to the empty state */
-    m_aTreeNodes  = new PE_TreeNode[s32TreeSize_];
-    m_s32TreeSize = s32TreeSize_;
+     m_s32TreeSize = s32TreeSize_;
+     m_aTreeNodes = new PE_TreeNode[s32TreeSize_];
 
     for(int i = 0; i < s32TreeSize_; i++)
     {
-      m_aTreeNodes[i].setNodeType(0);
-      m_aTreeNodes[i].setLeafWidth(0);
-      m_aTreeNodes[i].setLeafHeight(0);
-      m_aTreeNodes[i].setChildRight(-1);
-      m_aTreeNodes[i].setChildLeft(-1);    
+      m_aTreeNodes[i] = new PE_TreeNode();
+      m_aTreeNodes[i].setNodeType(as32NodeTypes_[i]);
+      m_aTreeNodes[i].setLeafWidth(as32NodeWidths_[i]);
+      m_aTreeNodes[i].setLeafHeight(as32NodeHeights_[i]);
+      m_aTreeNodes[i].setChildRight(as32NodeChildRights_[i]);
+      m_aTreeNodes[i].setChildLeft(as32NodeChildLefts_[i]);    
     }
     
-  } /* end public PE_SlicingTree() constructor */
+  } /* end public PE_SlicingTree() constructor */ //<>//
 
   /* Copy Constructor */
   public PE_SlicingTree(PE_SlicingTree Source_) 
@@ -311,7 +314,7 @@ POLISH EXPRESSion Seed Data
 
   // These are the available PEs for the game's Easy level 
   // Remember: -1 is V, -2 is H, and numbers are the node numbers
-  int[][] aas32PolishExpressionsEasy = 
+  final int[][] aas32PolishExpressionsEasy = 
   {
    //0  1  2  3  4  5  6  7  8  9  10  11  12  13  14
     {1, 3, 4,-1, 2,-2, 5,-1,-1},
@@ -321,9 +324,9 @@ POLISH EXPRESSion Seed Data
     {7, 3,-2, 6, 1, 2,-2, 5, 8, 4,-2, -1, -1, -1, -1}
   };
   
-  // The next two arrays are the associated widths and heigts for each node in the above PEs
+  // The next two arrays are the associated widths and heights for each node in the above PEs
   // A value of 0 corresponds to a cut
-  int[][] aas32EasyNodeWidths =
+  final int[][] aas32EasyNodeWidths =
   {
     {1,2,1,0,3,0,1,0,0},
     {2,2,1,0,0,4,1,0,5,0,0},
@@ -332,7 +335,7 @@ POLISH EXPRESSion Seed Data
     {1,1,0,1,1,1,0,1,1,1,0,0,0,0,0}
   };
   
-  int[][] aas32EasyNodeHeights =
+  final int[][] aas32EasyNodeHeights =
   {
     {4,2,2,0,2,0,4,0,0},
     {2,1,1,0,0,1,1,0,1,0,0},
@@ -345,20 +348,20 @@ POLISH EXPRESSion Seed Data
   // Only cut nodes have children; child nodes have -1 for these values.
   // To find these values, look for cuts in the PE and note their array index.  For the corresponding 
   // index below, the value in the array is index of the child
-  int[][] aas32EasyNodeRightChild =
+  final int[][] aas32EasyNodeRightChild =
   {
-    {-1,-1,-1, 2,-1,4,-1,6,7},
-    {-1,-1,-1, 2, 3,-1,-1,6,-1,8,9},
-    {-1,-1, 2,-1,3,-1,-1,6,-1,8,9},
-    {-1,-1,-1,3,-1,4,5,-1,-1,8,9},
-    {-1,-1,1,-1,-1,-1,5,-1,-1,-1,9,10,11,12,13}
+    {-1,-1,-1, 2,-1, 4,-1, 6, 7},
+    {-1,-1,-1, 2, 3,-1,-1, 6,-1, 8,9},
+    {-1,-1, 2,-1, 3,-1,-1, 6,-1, 8,9},
+    {-1,-1,-1, 3,-1, 4, 5,-1,-1, 8,9},
+    {-1,-1, 1,-1,-1,-1, 5,-1,-1,-1,9,10,11,12,13}
   };
   
-  int[][] aas32EasyNodeLeftChild =
+  final int[][] aas32EasyNodeLeftChild =
   {
-    {-1,-1,-1, 1,-1,3,-1,5,0},
-    {-1,-1,-1, 1, 0,-1,-1,5,-1,7,4},
-    {-1,-1, 0,-1,2,-1,-1,5,-1,7,4},
-    {-1,-1,-1,1,-1,3,0,-1,-1,7,6},
-    {-1,-1,0,-1,-1,-1,4,-1,-1,-1,8,7,6,3,2}
+    {-1,-1,-1, 1,-1, 3,-1, 5, 0},
+    {-1,-1,-1, 1, 0,-1,-1, 5,-1, 7,4},
+    {-1,-1, 0,-1, 2,-1,-1, 5,-1, 7,4},
+    {-1,-1,-1, 1,-1, 3, 0,-1,-1, 7,6},
+    {-1,-1, 0,-1,-1,-1, 4,-1,-1,-1,8,7,6,3,2}
   };  
