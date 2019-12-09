@@ -25,7 +25,7 @@ final int s32UserGridYHard = 250;
 
 final int s32GridBoxSize = 20;
 
-PE_TreeNode TestTreeNode;
+char[] PEString;
 
 /*****************************************************************************************
 STATE 0: Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button)
@@ -83,14 +83,14 @@ void PolishExpressState0()
       DifficultyControl.get(ScrollableList.class, "Difficulty").setBarVisible(false);
       s32GameLevel = int(DifficultyControl.get(ScrollableList.class, "Difficulty").getValue() ) + 1;
 
-      /* Create the solution grids and game pieces; any previous grids should be garbage collected, right? */
+      /* Create the solution grids and game pieces; any previous grids should be garbage collected, right Java? */
       if(s32GameLevel == 3)
       {
         UserSolutionGrid = new PE_ShapeGrid(s32HardWidth, s32HardHeight);
         s32UserGridLocationX = s32UserGridXHard;
         s32UserGridLocationY = s32UserGridYHard;
       }
-      else if (s32GameLevel == 2)
+      else if(s32GameLevel == 2)
       {
         UserSolutionGrid = new PE_ShapeGrid(s32MediumWidth, s32MediumHeight);
         s32UserGridLocationX = s32UserGridXMedium;
@@ -108,15 +108,11 @@ void PolishExpressState0()
         {
           as32CurrentPE[i] = aas32PolishExpressionsEasy[0][i];
         }
-        
-        /* Test create a PE_TreeNode */
-        TestTreeNode = new PE_TreeNode();
-        
+                
         /* Create the slicing tree */
         CurrentSlicingTree = new PE_SlicingTree(as32CurrentPE.length, aas32PolishExpressionsEasy[0],
                                                 aas32EasyNodeWidths[0], aas32EasyNodeHeights[0],
                                                 aas32EasyNodeRightChild[0], aas32EasyNodeLeftChild[0]);
-        
       }
           
       s8ProgramState = 1;
@@ -236,7 +232,56 @@ void PolishExpressState1()
     /* Print the User solution grid */
     UserSolutionGrid.DrawShapeGrid(s32UserGridLocationX, s32UserGridLocationY, s32GridBoxSize);
 
-    /* Print the available blocks */
+    /* Generate and print the available blocks - for now, just stack them straight up on the train car */
+    UserQuadShapes = new PE_QuadShape[CurrentSlicingTree.getNumLeafNodes()];
+    int s32TreeParser = 0;
+    int s32HeightTracker = 0;
+    
+    /* Loop through the whole tree to find all of the leaf nodes */
+    for(int i = 0; i < CurrentSlicingTree.getTreeSize(); i++)
+    {
+      if(CurrentSlicingTree.getNodeType(i) > 0)
+      {
+        UserQuadShapes[s32TreeParser] = new PE_QuadShape(50, 500 - s32HeightTracker,
+                                                         CurrentSlicingTree.getNodeLeafWidth(i),
+                                                         CurrentSlicingTree.getNodeLeafHeight(i),
+                                                         0, CurrentSlicingTree.getNodeType(i) );
+        UserQuadShapes[s32TreeParser].printQuadShape();
+        s32TreeParser++;
+        s32HeightTracker += CurrentSlicingTree.getNodeLeafHeight(i) * s32GridBoxSize;
+        /* Check if at end though this *should* be redundant */
+        if(s32TreeParser == CurrentSlicingTree.getNumLeafNodes())
+        {
+          break;
+        }
+      }
+    }
+    
+    /* Draw the puff of smoke with the PE inside */
+    fill(gray);
+    ellipse(260, 450, 250, 50);
+    
+    PEString = new char[CurrentSlicingTree.getTreeSize()];
+    for(int i = 0; i < PEString.length; i++)
+    {
+      /* Parse out the node names and convert to cut value or number ASCII codes */
+      PEString[i] = char(CurrentSlicingTree.getNodeType(i));
+      if(PEString[i] == char(-1))
+      {
+        PEString[i] = 'V';
+      }
+      else if (PEString[i] == char(-2))
+      {
+        PEString[i] = 'H';
+      }
+      else
+      {
+        PEString[i] += 0x30;
+      }
+    }
+    
+    fill(black);
+    text(PEString, 0, PEString.length, (200 + (PEString.length * 6)), 448);
 
     if(bSoundOn)
     {

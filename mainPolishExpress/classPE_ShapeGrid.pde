@@ -408,16 +408,14 @@ class PE_ShapeGrid
   public void DrawShapeGrid(int s32TopLeftX_, int s32TopLeftY_, int s32BlockSize_) 
   {
     /* Set font height based on the size of the block, but limit to a maximum size */    
-    int s32FontHeight = 0;
-    
     if(s32BlockSize_ >= 10)
     {
-      s32FontHeight = s32BlockSize_ - 4;
+      textSize(s32BlockSize_ - 4);
     }
     
     if(s32BlockSize_ > 52)
     {
-      s32FontHeight = 48;
+      textSize(48);
     }
 
     textAlign(CENTER, CENTER);
@@ -442,11 +440,9 @@ class PE_ShapeGrid
           rect( (s32TopLeftX_ + (j * s32BlockSize_)), 
                 (s32TopLeftY_ + (i * s32BlockSize_)),
                  s32BlockSize_, s32BlockSize_);
-          if(s32FontHeight > 8)
-          {
-            fill(255);
-            text(m_aas32Grid[i][j], i * s32BlockSize_, j * s32BlockSize_);
-          }
+                 
+          fill(255);
+          text(m_aas32Grid[i][j], i * s32BlockSize_, j * s32BlockSize_);
         }
       }
     } /* end for(int i = 0; i < m_s32GridHeight; i++) */    

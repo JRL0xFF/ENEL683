@@ -163,8 +163,8 @@ visualization in the debugger.
 The format of the input arrays is as follows:
 
 int as32NodeType[]: see PE_TreeNode for allowed values
-int as32LeafWidth[]: horizontal height of a leaf node (if applicable, otherwise 0);
-int as32LeafHeight[]:
+int as32LeafWidth[]: horizontal size of a leaf node (if applicable, otherwise 0);
+int as32LeafHeight[]: vertical size of a leaf node (if applicable, otherwise 0);
 int as32ChildRight[]: see PE_TreeNode for allowed values
 int as32ChildLeft[]: see PE_TreeNode for allowed values
 */
@@ -173,12 +173,14 @@ class PE_SlicingTree
 {
   private PE_TreeNode[] m_aTreeNodes;
   private int m_s32TreeSize;
+  private int m_s32NumLeafNodes;
 
   /* Default constructor: create an empty tree of size 1 */
   public PE_SlicingTree() 
   {
     m_aTreeNodes[1]  = new PE_TreeNode();
     m_s32TreeSize = 1;
+    m_s32NumLeafNodes = 1;
     
     m_aTreeNodes[0].setNodeType(0);
     m_aTreeNodes[0].setLeafWidth(0);
@@ -195,19 +197,26 @@ class PE_SlicingTree
   {
     /* Create and initialize all the nodes to the empty state */
      m_s32TreeSize = s32TreeSize_;
+     m_s32NumLeafNodes = 0;
      m_aTreeNodes = new PE_TreeNode[s32TreeSize_];
 
     for(int i = 0; i < s32TreeSize_; i++)
     {
       m_aTreeNodes[i] = new PE_TreeNode();
       m_aTreeNodes[i].setNodeType(as32NodeTypes_[i]);
+      /* Count the node if it's a leaf node */
+      if(as32NodeTypes_[i] > 0)
+      {
+        m_s32NumLeafNodes++;
+      }
+      
       m_aTreeNodes[i].setLeafWidth(as32NodeWidths_[i]);
       m_aTreeNodes[i].setLeafHeight(as32NodeHeights_[i]);
       m_aTreeNodes[i].setChildRight(as32NodeChildRights_[i]);
       m_aTreeNodes[i].setChildLeft(as32NodeChildLefts_[i]);    
     }
     
-  } /* end public PE_SlicingTree() constructor */ //<>//
+  } /* end public PE_SlicingTree() constructor */
 
   /* Copy Constructor */
   public PE_SlicingTree(PE_SlicingTree Source_) 
@@ -215,6 +224,7 @@ class PE_SlicingTree
     /* Create and initialize all the nodes to the empty state */
     this.m_aTreeNodes  = new PE_TreeNode[Source_.getTreeSize()];
     this.m_s32TreeSize = Source_.getTreeSize();
+    this.m_s32NumLeafNodes = Source_.getNumLeafNodes();
 
     for(int i = 0; i < this.m_s32TreeSize; i++)
     {
@@ -234,6 +244,11 @@ class PE_SlicingTree
     return m_s32TreeSize;
   } /* end getTreeSize() */ 
 
+  
+  public int getNumLeafNodes() 
+  {
+    return m_s32NumLeafNodes;
+  } /* end getNumLeafNodes() */ 
   
   public int getNodeType(int s32NodeIndex_) 
   {
@@ -305,12 +320,9 @@ class PE_SlicingTree
 
 /* 
 POLISH EXPRESSion Seed Data
-
 */
 
 /* Easy level floor plans are 5 x 4 in size.  They could have up to 20 elements if all were 1x1. */
-  //final int s32NumEasyLevelPuzzles = 5;
-  //final int s32MaxExpressionSize = 20;
 
   // These are the available PEs for the game's Easy level 
   // Remember: -1 is V, -2 is H, and numbers are the node numbers

@@ -66,7 +66,7 @@ color button_background = color(92,101,121);
 
 /* Data structures for game */
 PE_ShapeGrid UserSolutionGrid;
-PE_QuadShape QuadShape;
+PE_QuadShape[] UserQuadShapes;
 PE_SlicingTree CurrentSlicingTree;
 int[] as32CurrentPE;
 
