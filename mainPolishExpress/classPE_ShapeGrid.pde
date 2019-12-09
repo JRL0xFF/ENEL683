@@ -19,6 +19,7 @@ public void DrawShapeGrid(int s32TopLeftX_, int s32TopLeftX_, int s32BlockSize_)
 */
 
 color colorFilledBlock = color(63,2,178);
+color colorFilledBlockHighlight = color(127,92,193);
 
 class PE_ShapeGrid 
 {

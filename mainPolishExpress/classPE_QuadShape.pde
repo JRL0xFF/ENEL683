@@ -90,7 +90,7 @@ class PE_QuadShape
   } /* end getLabel() */  
 
 
-  public void printQuadShape()
+  public void printQuadShape(color colorFillBlock)
   {
     /* Draw a filled box and add the font if the block is large enough */ 
    
@@ -109,7 +109,7 @@ class PE_QuadShape
     {
       for(int j = 0; j < m_s32Width; j++)
       {
-         fill(colorFilledBlock);
+         fill(colorFillBlock);
          rect(m_s32CurrentLocationX + (s32GridBoxSize * j), 
               m_s32CurrentLocationY - (s32GridBoxSize * i), 
               s32GridBoxSize, s32GridBoxSize);

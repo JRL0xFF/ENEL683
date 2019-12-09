@@ -302,7 +302,6 @@ void mousePressed()
       break;     
     } /* end Game over mouse functionality */
 
-
     default:
     {
       print("ERROR: undefined mouse pressed state\n\r");
@@ -314,7 +313,83 @@ void mousePressed()
 } /* end mousePressed() */
 
 
+void mouseDragged() 
+{
+  switch(s8ProgramState)
+  {
+    /* Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button) */
+    case 0:
+    {
+      break;     
+    } /* end Start screen mouseDragged functionality */
+
+    /* State 1 = Game starting (starting countdown; exits on timer delay) */
+    case 1:
+    {
+      break;
+    } /* end Game starting mouseDragged functionality */
+
+    /* State 2 = Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level) */
+    case 2:
+    {      
+      PolishExpressState2MouseDragged();
+      break;     
+    } /* end Game playing mouseDragged functionality */
+
+    /* 3 = Game over (good-bye screen; exits on "OK" or "Exit" buttons) */
+    case 3:
+    {
+      break;     
+    } /* end Game over mouseDragged functionality */
+
+    default:
+    {
+      print("ERROR: undefined mouse dragged state\n\r");
+      exit();
+    } /* end default */
+
+  } /* end switch(s8ProgramState) */
+  
+} /* end mouseDragged() */
 
 
+void mouseReleased() 
+{
+  switch(s8ProgramState)
+  {
+    /* Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button) */
+    case 0:
+    {
+      break;     
+    } /* end Start screen mouseReleased functionality */
+
+    /* State 1 = Game starting (starting countdown; exits on timer delay) */
+    case 1:
+    {
+      break;
+    } /* end Game starting mouseReleased functionality */
+
+    /* State 2 = Game playing (graphics and gameplay active; exits on "quit" button, death, or completion of level) */
+    case 2:
+    {      
+      PolishExpressState2MouseReleased();
+      break;     
+    } /* end Game playing mouseReleased functionality */
+
+    /* 3 = Game over (good-bye screen; exits on "OK" or "Exit" buttons) */
+    case 3:
+    {
+      break;     
+    } /* end Game over mouseReleased functionality */
+
+    default:
+    {
+      print("ERROR: undefined mouse released state\n\r");
+      exit();
+    } /* end default */
+
+  } /* end switch(s8ProgramState) */
+
+} /* end mouseReleased() */
 
   

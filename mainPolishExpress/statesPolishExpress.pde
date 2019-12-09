@@ -26,6 +26,10 @@ final int s32UserGridYHard = 250;
 final int s32GridBoxSize = 20;
 
 char[] PEString;
+int s32OverBox;
+boolean bMouseLocked = false;
+float xOffset = 0.0; 
+float yOffset = 0.0;
 
 /*****************************************************************************************
 STATE 0: Start screen (Difficulty option, "Start Game" button, "Exit" button, "Instructions" button)
@@ -229,15 +233,14 @@ void PolishExpressState1()
     image(imgGameScreen, 0, 0);
     shapeTrain(190, 490, 0);
     
-    /* Print the User solution grid */
-    UserSolutionGrid.DrawShapeGrid(s32UserGridLocationX, s32UserGridLocationY, s32GridBoxSize);
-
     /* Generate and print the available blocks - for now, just stack them straight up on the train car */
     UserQuadShapes = new PE_QuadShape[CurrentSlicingTree.getNumLeafNodes()];
     int s32TreeParser = 0;
     int s32HeightTracker = 0;
     
-    /* Loop through the whole tree to find all of the leaf nodes */
+    /* Loop through the whole tree to find and print all of the leaf nodes.
+    After this initial print, UserQuadShapes will refresh in State 2 and update
+    with mouse activity. */
     for(int i = 0; i < CurrentSlicingTree.getTreeSize(); i++)
     {
       if(CurrentSlicingTree.getNodeType(i) > 0)
@@ -246,7 +249,7 @@ void PolishExpressState1()
                                                          CurrentSlicingTree.getNodeLeafWidth(i),
                                                          CurrentSlicingTree.getNodeLeafHeight(i),
                                                          0, CurrentSlicingTree.getNodeType(i) );
-        UserQuadShapes[s32TreeParser].printQuadShape();
+        UserQuadShapes[s32TreeParser].printQuadShape(colorFilledBlock);
         s32TreeParser++;
         s32HeightTracker += CurrentSlicingTree.getNodeLeafHeight(i) * s32GridBoxSize;
         /* Check if at end though this *should* be redundant */
@@ -257,10 +260,7 @@ void PolishExpressState1()
       }
     }
     
-    /* Draw the puff of smoke with the PE inside */
-    fill(gray);
-    ellipse(260, 450, 250, 50);
-    
+    /* Prepare the PE string for display */
     PEString = new char[CurrentSlicingTree.getTreeSize()];
     for(int i = 0; i < PEString.length; i++)
     {
@@ -280,9 +280,6 @@ void PolishExpressState1()
       }
     }
     
-    fill(black);
-    text(PEString, 0, PEString.length, (200 + (PEString.length * 6)), 448);
-
     if(bSoundOn)
     {
       songGameScreen.loop();
@@ -315,7 +312,10 @@ void PolishExpressState2()
   fill(255);
   text("SCORE",1050,25,125,40);
   text("0",1050,25,125,100);
-    
+
+  image(imgGameScreen, 0, 0);
+  shapeTrain(190, 490, s8GraphicState);
+
   /* Update the graphics every s32GraphicDelayValue iterations */
   s32GraphicChangeDelay--;
   if(s32GraphicChangeDelay == 0)
@@ -329,10 +329,45 @@ void PolishExpressState2()
     }
     
     /* Update the animated graphics */
-    shapeTrain(190,490,s8GraphicState);     
+    //shapeTrain(190,490,s8GraphicState);     
     
   }
 
+  /* Draw the puff of smoke with the PE inside */
+  fill(gray);
+  ellipse(260, 450, 250, 50);
+  fill(black);
+  text(PEString, 0, PEString.length, (200 + (PEString.length * 6)), 448);
+
+  /* Print the User solution grid */
+  UserSolutionGrid.DrawShapeGrid(s32UserGridLocationX, s32UserGridLocationY, s32GridBoxSize);
+
+  /* Update the QuadShapes. For mouse-over, the Y-location must be adjusted since the boxes are being drawn from
+  bottom to top and IsMouseOverRect assumes a standard top-down rectangle definition. */
+  int[] as32QuadShape;
+  as32QuadShape = new int[4];
+  
+  //s32OverBox = -1;
+  for(int i = 0; i < UserQuadShapes.length; i++)
+  {
+    as32QuadShape[0] = UserQuadShapes[i].getLocX();
+    as32QuadShape[1] = UserQuadShapes[i].getLocY() - ((UserQuadShapes[i].getHeight() - 1) * s32GridBoxSize);
+    as32QuadShape[2] = UserQuadShapes[i].getWidth() * s32GridBoxSize;
+    as32QuadShape[3] = UserQuadShapes[i].getHeight() * s32GridBoxSize;
+    if(IsMouseOverRect(as32QuadShape))
+    {
+      UserQuadShapes[i].printQuadShape(colorFilledBlockHighlight);
+      if(!bMouseLocked)
+      {
+        s32OverBox = i;
+      }
+    }
+    else
+    {
+      UserQuadShapes[i].printQuadShape(colorFilledBlock);
+    }    
+  }
+      
   /* Check the STOP button */
   
   /* Highlight the button on mouse-over */
@@ -352,7 +387,7 @@ void PolishExpressState2()
     textAlign(CENTER, CENTER);
     textSize(14);
     fill(button_text_color);
-    text(strGameButtonNames.get(i), as32GameButtons[i][0], as32GameButtons[i][1], as32GameButtons[i][2], as32GameButtons[i][3]);
+    text(strGameButtonNames.get(i), as32GameButtons[i][0], as32GameButtons[i][1] - 2, as32GameButtons[i][2], as32GameButtons[i][3]);
   }  
   
   if(s32ButtonNumberPressed == s32GameStopButton)
@@ -391,8 +426,36 @@ void PolishExpressState2Mouse()
       s32ButtonNumberPressed = i;
     }
   }
+
+  /* Manage box movement */
+  if(s32OverBox >= 0)
+  {
+    bMouseLocked = true;
+  }
+  else
+  {
+    bMouseLocked = false;
+  }
   
 } /* end PolishExpressState2Mouse() */
+
+
+void PolishExpressState2MouseDragged()
+{
+  if(bMouseLocked)
+  {
+    UserQuadShapes[s32OverBox].setLocation( int(mouseX - xOffset), int(mouseY-yOffset) );
+  }
+  
+} /* end PolishExpressState2MouseDragged() */
+
+
+void PolishExpressState2MouseReleased()
+{
+  bMouseLocked = false;
+  s32OverBox = -1;
+  
+} /* end PolishExpressState2MouseReleased() */
 
 
 /*****************************************************************************************
