@@ -58,6 +58,7 @@ color blue = color(5,178,255);
 color gray = color(149,149,149);
 color dark_gray = color(82,82,82);
 color black = color(0,0,0);
+color white = color(255,255,255);
 color green = color(46,183,6);
 color button_color = color(125,156,222);
 color button_color_mouse_over = color(173,193,234);

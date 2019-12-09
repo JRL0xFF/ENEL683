@@ -6,10 +6,12 @@ and mouse functionality code PolishExpressStateXMouse()
 */
 
 /* Global variables */
-int s32ButtonNumberPressed = s32NoButtonPressed;
-byte s8GraphicState;
+int  s32ButtonNumberPressed = s32NoButtonPressed;
 int  s32GraphicDelayValue;   
 int  s32GraphicChangeDelay;
+int  s32BridgeLocation;
+int  s32BridgeMoveDelay;
+byte s8GraphicState;
 
 int s32UserGridLocationX;
 int s32UserGridLocationY;
@@ -232,6 +234,8 @@ void PolishExpressState1()
     s32GraphicChangeDelay = s32GraphicDelayValue;
     image(imgGameScreen, 0, 0);
     shapeTrain(190, 490, 0);
+    s32BridgeLocation = 1200;
+    s32BridgeMoveDelay = 0;
     
     /* Generate and print the available blocks - for now, just stack them straight up on the train car */
     UserQuadShapes = new PE_QuadShape[CurrentSlicingTree.getNumLeafNodes()];
@@ -315,6 +319,19 @@ void PolishExpressState2()
 
   image(imgGameScreen, 0, 0);
   shapeTrain(190, 490, s8GraphicState);
+  
+  /* Update the bridge location */
+  fill(white);
+  rect(s32BridgeLocation, 561, s32GridBoxSize * ((2 * s32GameLevel) + 4), 90);
+  fill(blue);
+  rect(s32BridgeLocation, 650, s32GridBoxSize * ((2 * s32GameLevel) + 4), 25);
+  
+  s32BridgeMoveDelay++;
+  if(s32BridgeMoveDelay == 3)
+  {
+    s32BridgeMoveDelay = 0;
+    s32BridgeLocation--;     
+  }
 
   /* Update the graphics every s32GraphicDelayValue iterations */
   s32GraphicChangeDelay--;
@@ -326,11 +343,7 @@ void PolishExpressState2()
     if(s8GraphicState == 3)
     {
       s8GraphicState = 0;
-    }
-    
-    /* Update the animated graphics */
-    //shapeTrain(190,490,s8GraphicState);     
-    
+    }       
   }
 
   /* Draw the puff of smoke with the PE inside */
