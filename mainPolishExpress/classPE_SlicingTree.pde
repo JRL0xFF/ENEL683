@@ -306,9 +306,59 @@ POLISH EXPRESSion Seed Data
 */
 
 /* Easy level floor plans are 5 x 4 in size.  They could have up to 20 elements if all were 1x1. */
+  //final int s32NumEasyLevelPuzzles = 5;
+  //final int s32MaxExpressionSize = 20;
 
-  PE_GameData[] m_aTreeNodes;
-  private int m_s32TreeSize;
-
-
-    m_aTreeNodes  = new PE_TreeNode[1];
+  // These are the available PEs for the game's Easy level 
+  // Remember: -1 is V, -2 is H, and numbers are the node numbers
+  int[][] aas32PolishExpressionsEasy = 
+  {
+   //0  1  2  3  4  5  6  7  8  9  10  11  12  13  14
+    {1, 3, 4,-1, 2,-2, 5,-1,-1},
+    {7, 1, 5,-2,-1, 4, 6,-1, 2,-2,-2},
+    {5, 3,-1, 4,-2, 6, 1,-2, 2,-1,-1},
+    {6, 4, 1,-2, 3,-2,-1, 2, 5,-1,-2},
+    {7, 3,-2, 6, 1, 2,-2, 5, 8, 4,-2, -1, -1, -1, -1}
+  };
+  
+  // The next two arrays are the associated widths and heigts for each node in the above PEs
+  // A value of 0 corresponds to a cut
+  int[][] aas32EasyNodeWidths =
+  {
+    {1,2,1,0,3,0,1,0,0},
+    {2,2,1,0,0,4,1,0,5,0,0},
+    {2,1,0,3,0,1,1,0,1,0,0},
+    {3,2,2,0,2,0,0,1,4,0,0},
+    {1,1,0,1,1,1,0,1,1,1,0,0,0,0,0}
+  };
+  
+  int[][] aas32EasyNodeHeights =
+  {
+    {4,2,2,0,2,0,4,0,0},
+    {2,1,1,0,0,1,1,0,1,0,0},
+    {3,3,0,1,0,1,3,0,4,0,0},
+    {3,1,1,0,1,0,0,1,1,0,0},
+    {2,2,0,4,3,1,0,4,3,1,0,0,0,0,0}
+  };
+  
+  // The last two arrays are indexes to the children of each parent node.
+  // Only cut nodes have children; child nodes have -1 for these values.
+  // To find these values, look for cuts in the PE and note their array index.  For the corresponding 
+  // index below, the value in the array is index of the child
+  int[][] aas32EasyNodeRightChild =
+  {
+    {-1,-1,-1, 2,-1,4,-1,6,7},
+    {-1,-1,-1, 2, 3,-1,-1,6,-1,8,9},
+    {-1,-1, 2,-1,3,-1,-1,6,-1,8,9},
+    {-1,-1,-1,3,-1,4,5,-1,-1,8,9},
+    {-1,-1,1,-1,-1,-1,5,-1,-1,-1,9,10,11,12,13}
+  };
+  
+  int[][] aas32EasyNodeLeftChild =
+  {
+    {-1,-1,-1, 1,-1,3,-1,5,0},
+    {-1,-1,-1, 1, 0,-1,-1,5,-1,7,4},
+    {-1,-1, 0,-1,2,-1,-1,5,-1,7,4},
+    {-1,-1,-1,1,-1,3,0,-1,-1,7,6},
+    {-1,-1,0,-1,-1,-1,4,-1,-1,-1,8,7,6,3,2}
+  };  
